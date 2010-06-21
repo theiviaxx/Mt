@@ -1,0 +1,75 @@
+/* Window  2200 */
+.MDialog {
+	position: absolute;
+	text-align: left;
+	
+	margin: 32px;
+	padding: 0px;
+	border: 25px;
+	font-size: 14pt;
+	z-index: 2200;
+	cursor: pointer;
+	-webkit-border-image: url('/static/images/window.png') 25 25 25 25 stretch stretch;
+}
+	.MDialog span.label {
+		position: absolute;
+		top: -25px;
+		width: 100%;
+		height: 25px;
+		font-size: 10pt;
+		text-shadow: 1px 1px 2px #fff;
+		text-align: center;
+	}
+		.MDialog span.label img {
+			
+		}
+	.MDialog div.actions {
+		position: absolute;
+		top: -20px;
+		left: -20px;
+	}
+	.MDialog div.action {
+		float: left;
+		width: 16px;
+		height: 16px;
+		margin-right: 2px;
+		background: url('/static/images/action_button.png') top left no-repeat;
+	}
+		.MDialog div.close:hover {
+			background: url('/static/images/action_button.png') -16px left no-repeat;
+		}
+		.MDialog div.minimize:hover {
+			background: url('/static/images/action_button.png') -32px left no-repeat;
+		}
+		.MDialog div.maximize:hover {
+			background: url('/static/images/action_button.png') -48px left no-repeat;
+		}
+.button {
+				display: inline-block;
+				
+				height: 46px;
+				width: 200px;
+				text-align: left;
+				
+				margin: 0px;
+				padding: 0px;
+				border: 12px;
+				font-size: 14pt;
+				cursor: pointer;
+				-webkit-border-image: url('/static/images/whiteButton.png') 0 12 0 12 round stretch;
+			}
+				.button img {
+					margin-top: 12px;
+				}
+				.button span {
+					margin-top: 12px;
+				}
+			
+					
+			#button {
+				background: #eee;
+			}
+			.mask {
+				background: rgba(0,0,0,0.3);
+				z-index: 1000;
+			}
