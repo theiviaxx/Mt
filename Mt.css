@@ -1,4 +1,8 @@
 /* Window  2200 */
+.MWidget {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
 .MDialog {
 	position: absolute;
 	text-align: left;
@@ -44,32 +48,27 @@
 		.MDialog div.maximize:hover {
 			background: url('/static/images/action_button.png') -48px left no-repeat;
 		}
-.button {
-				display: inline-block;
-				
-				height: 46px;
-				width: 200px;
-				text-align: left;
-				
-				margin: 0px;
-				padding: 0px;
-				border: 12px;
-				font-size: 14pt;
-				cursor: pointer;
-				-webkit-border-image: url('/static/images/whiteButton.png') 0 12 0 12 round stretch;
-			}
-				.button img {
-					margin-top: 12px;
-				}
-				.button span {
-					margin-top: 12px;
-				}
-			
-					
-			#button {
-				background: #eee;
-			}
-			.mask {
-				background: rgba(0,0,0,0.3);
-				z-index: 1000;
-			}
+.MButton {
+	display: inline-block;
+	
+	height: 22px;
+	width: 200px;
+	text-align: left;
+	
+	margin: 0px;
+	padding: 0px;
+	border: 10px;
+	font-size: 14pt;
+	cursor: pointer;
+	-webkit-border-image: url('/static/images/whiteButton.png') 0 10 0 10 round stretch;
+}
+	.MButton img {
+		margin-top: 12px;
+	}
+	.MButton span {
+		margin-top: 12px;
+	}
+.mask {
+	background: rgba(0,0,0,0.3);
+	z-index: 1000;
+}

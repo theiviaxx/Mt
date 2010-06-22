@@ -230,12 +230,13 @@ Mt.MDialog = new Class({
 				display: 'none'
 			}
 		});
-		this.options.content.setStyles({
+		this.content = $(this.options.content);
+		this.content.setStyles({
 			left: -24,
 			width: this.container.getStyle('width').toInt() + 48,
 			height: '100%',
 			position: 'absolute',
-			overflow: 'scroll'
+			overflow: 'auto'
 		}).inject(this.container);
 		
 		this.label = new Element('span', {
@@ -259,7 +260,7 @@ Mt.MDialog = new Class({
 		return this;
 	},
 	toElement: function() {
-		return this.container;
+		return this.content;
 	},
 	center: function() {
 		this.container.setStyles({
@@ -284,16 +285,16 @@ Mt.MDialog = new Class({
 
 Mt.MButton = new Class({
 	Extends: Mt.MWidget,
-	REST: 'url(/static/images/whiteButton.png) 0 12 0 12 round stretch',
-	OVER: 'url(/static/images/whiteButton_over.png) 0 12 0 12 round stretch',
-	DOWN: 'url(/static/images/whiteButton_down.png) 0 12 0 12 round stretch',
-	FOCUS: 'url(/static/images/whiteButton_focus.png) 0 12 0 12 round stretch',
+	REST: 'url(/static/images/whiteButton.png) 0 10 0 10 round stretch',
+	OVER: 'url(/static/images/whiteButton_over.png) 0 10 0 10 round stretch',
+	DOWN: 'url(/static/images/whiteButton_down.png) 0 10 0 10 round stretch',
+	FOCUS: 'url(/static/images/whiteButton_focus.png) 0 10 0 10 round stretch',
 	options: {
 		align: 'left',
 		image: '/static/images/blank.png',
 		label: '',
 		width: 'auto',
-		height: 46
+		height: 22
 	},
 	initialize: function(parent, options) {
 		this.parent(parent, options)
@@ -301,7 +302,7 @@ Mt.MButton = new Class({
 		this.isMouseDown = false;
 		this.isFocus = false;
 		this.container = new Element('div', {
-			'class': 'button',
+			'class': 'MButton',
 			styles: {
 				height: this.options.height,
 				width: this.options.width,
@@ -346,6 +347,8 @@ Mt.MButton = new Class({
 			var toStyle = (this.isMouseDown) ? this.FOCUS : this.REST;
 			this.container.setStyle('-webkit-border-image', toStyle)
 		}.bind(this));
+		
+		this.container.inject($(this.parentObj))
 		
 		
 		return this;
