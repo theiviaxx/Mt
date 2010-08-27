@@ -7,30 +7,51 @@
 		<script type="text/javascript" src="/static/javascript/mootoolsCore.js"></script>
 		<script type="text/javascript" src="/static/javascript/mootoolsMore.js"></script>
 		<script type="text/javascript" src="../Mt.js"></script>
+		<script type="text/javascript" src="../constants.js"></script>
 		
 		<script type="text/javascript">
-			var dlg, btn;
+			var dlg, btn, btn1, l;
 			window.addEvent('domready', function() {
 				dlg = new Mt.MDialog(null, {
 					label: 'Dialog',
 					content: 'main',
-					modal: false
+					modal: true,
+					resize: true
 				});
 				btn = new Mt.MButton(dlg, {
-					label: 'button'
+					label: 'Center',
+					icon: '/static/images/icons/add.png',
+					width: 100,
+					height: 100,
+					onClick: function() {
+						dlg.center();
+					}
 				});
+				le = new Mt.MLineEdit(dlg, {});
+				l = new Mt.MListWidget(dlg, {});
+				new Mt.MButton(dlg, {
+					label: 'add',
+					onClick: function() {
+						l.addItem(le.get('text'));
+						le.clear();
+					}
+				});
+				new Mt.MButton(dlg, {
+					label: 'remove',
+					onClick: function() {
+						l.removeItem(l.get('selected'));
+					}
+				});
+				l.addItems(['one', 'two', 'five', 'three', 'four', 'six']);
 				
 				dlg.open();
+				dlg.center();
 			})
 		</script>
 	</head>
 	<body>
 		<div id='main'>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus adipiscing tortor ac risus elementum commodo. In molestie, dui lacinia sagittis vestibulum, nunc mi tempor quam, et gravida nisi est ut metus. Nam eget urna et metus accumsan semper. Vivamus adipiscing fringilla enim, et ullamcorper ligula gravida ac. Etiam et ullamcorper lorem. Ut scelerisque euismod justo, non auctor erat convallis at. Quisque iaculis, velit vitae consectetur viverra, tortor ligula viverra mi, pellentesque mattis sapien nibh at ipsum. Integer in molestie ligula. Duis semper nibh vitae sapien blandit quis bibendum nulla auctor. Suspendisse malesuada massa sed lorem adipiscing cursus. Donec auctor magna elementum metus porttitor et fermentum enim volutpat. Etiam eleifend sagittis turpis, sagittis lobortis diam ultrices auctor. Mauris convallis enim sit amet eros sodales ac malesuada ipsum pulvinar.</p>
-			<p>Pellentesque in nisi sed nibh ultricies ultrices eu a dolor. Integer id eros justo, nec pretium augue. Pellentesque eget tortor quis neque viverra tincidunt nec ut velit. Etiam gravida porta metus, convallis pretium erat ullamcorper nec. Nam nec tellus nunc, eget condimentum dui. Donec eget ante vitae augue consectetur hendrerit ac nec justo. Aliquam eget nunc leo. Nunc id volutpat nisl. Proin ipsum nulla, molestie ac ullamcorper sit amet, lacinia quis leo. Curabitur vel purus sed diam interdum fringilla ac in velit. Maecenas quis ligula quis mauris pellentesque tristique. Integer at purus eget nulla fermentum congue eget vel felis. Suspendisse suscipit vulputate magna, quis faucibus diam facilisis quis.</p>
-			<p>Nam gravida sodales est. Curabitur ac neque ut neque tristique molestie. Donec vitae dolor mauris. Aliquam magna odio, vulputate ullamcorper porttitor sed, tempus vel magna. Ut non quam at ipsum auctor luctus non ac neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin pretium faucibus magna sed faucibus. Aenean non volutpat nibh. Nam vitae hendrerit tortor. Cras ut tempor tortor.</p>
-			<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque odio mauris, cursus quis pulvinar ac, pulvinar eu purus. Suspendisse sapien neque, congue eu posuere et, malesuada a augue. Fusce quis suscipit tellus. Quisque lectus risus, pellentesque eget eleifend auctor, tempus dignissim turpis. Fusce pellentesque sodales lorem, at dictum lacus ullamcorper eu. Quisque nulla dui, vulputate at ultrices volutpat, porta vitae elit. Nunc euismod ultricies pulvinar. Aliquam eu elit dui, ullamcorper egestas lacus. Curabitur gravida est massa, eget faucibus felis. Phasellus nisi urna, consectetur et convallis id, commodo vitae massa. Pellentesque gravida, ligula at congue fringilla, ante ipsum facilisis urna, ut congue augue ante eget sapien.</p>
-			<p>In sodales elementum dui, at lacinia nisl vehicula id. Maecenas sit amet diam diam. Sed adipiscing iaculis tristique. Ut semper, nisi cursus vulputate gravida, nisl nisl condimentum turpis, in sollicitudin magna lacus ac leo. Proin mi felis, tincidunt eget sagittis vel, sodales vel augue. Quisque blandit, elit eu euismod tristique, mi erat congue nisl, et tincidunt est nulla a ligula. Curabitur molestie gravida convallis. Integer neque metus, lacinia in elementum vitae, imperdiet vitae libero. Donec eu ante est, et rhoncus nulla. Pellentesque faucibus porta leo, a iaculis est elementum nec. Proin pharetra diam a ante mattis vulputate viverra elit adipiscing. In dignissim, nisi vel imperdiet sodales, ante augue malesuada ipsum, ut dignissim justo ipsum ultrices nunc. Fusce id tellus at lacus pretium varius a non turpis. Quisque tempor diam non est lobortis ultrices. Maecenas enim tellus, luctus vel laoreet et, semper vel elit. Duis gravida porta ipsum non ultricies. Aenean in mi metus, eget ullamcorper eros. Maecenas quis euismod est. Nulla facilisi.</p>
+			<!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus adipiscing tortor ac risus elementum commodo. In molestie, dui lacinia sagittis vestibulum, nunc mi tempor quam, et gravida nisi est ut metus. Nam eget urna et metus accumsan semper. Vivamus adipiscing fringilla enim, et ullamcorper ligula gravida ac. Etiam et ullamcorper lorem. Ut scelerisque euismod justo, non auctor erat convallis at. Quisque iaculis, velit vitae consectetur viverra, tortor ligula viverra mi, pellentesque mattis sapien nibh at ipsum. Integer in molestie ligula. Duis semper nibh vitae sapien blandit quis bibendum nulla auctor. Suspendisse malesuada massa sed lorem adipiscing cursus. Donec auctor magna elementum metus porttitor et fermentum enim volutpat. Etiam eleifend sagittis turpis, sagittis lobortis diam ultrices auctor. Mauris convallis enim sit amet eros sodales ac malesuada ipsum pulvinar.</p>-->
 		</div>
 	</body>
 </html>
