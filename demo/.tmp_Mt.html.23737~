@@ -7,19 +7,16 @@
 		<script type="text/javascript" src="/static/javascript/mootoolsCore.js"></script>
 		<script type="text/javascript" src="/static/javascript/mootoolsMore.js"></script>
 		<script type="text/javascript" src="../Mt.js"></script>
-		<script type="text/javascript" src="../Mt.MObserver.js"></script>
 		<script type="text/javascript" src="../Mt.MDialog.js"></script>
-		<script type="text/javascript" src="../Mt.MButton.js"></script>
 		<script type="text/javascript" src="../Mt.MSlider.js"></script>
-		<script type="text/javascript" src="../Mt.MToolBar.js"></script>
 		<script type="text/javascript" src="../constants.js"></script>
 		
 		<script type="text/javascript">
-			var dlg, btn, btn1, l, le, s, x, p, tb, a;
+			var dlg, btn, btn1, l, s, x;
 			window.addEvent('domready', function() {
 				dlg = new Mt.MDialog(null, {
-					text: 'Dialog',
-					icon: '/static/images/icons/add.png',
+					label: 'Dialog',
+					image: '/static/images/icons/add.png',
 					content: 'main',
 					modal: true,
 					resize: true,
@@ -27,7 +24,7 @@
 					actions: [Mt.DialogActions.Close]
 				});
 				btn = new Mt.MButton(dlg, {
-					text: 'Center',
+					label: 'Center',
 					icon: '/static/images/icons/add.png',
 					onClick: function() {
 						dlg.center();
@@ -36,14 +33,14 @@
 				le = new Mt.MLineEdit(dlg, {});
 				l = new Mt.MListWidget(dlg, {});
 				new Mt.MButton(dlg, {
-					text: 'add',
+					label: 'add',
 					onClick: function() {
 						l.addItem(le.get('text'));
 						le.clear();
 					}
 				});
 				new Mt.MButton(dlg, {
-					text: 'remove',
+					label: 'remove',
 					onClick: function() {
 						l.removeItem(l.get('selected'));
 					}
@@ -51,8 +48,7 @@
 				l.addItems(['one', 'two', 'five', 'three', 'four', 'six']);
 				
 				btn1 = new Mt.MButton(null, {
-					text: 'Open',
-					icon: '/static/images/icons/add.png',
+					label: 'Open',
 					onClick: function() {
 						dlg.open();
 					}
@@ -60,16 +56,12 @@
 				
 				
 				new Mt.MPanel(null, {
-					text: 'Panel',
+					label: 'Panel',
 					content: 'main1'
 				});
-				p = new Mt.MPanel(null, {
-					text: 'Panel2'
+				var p = new Mt.MPanel(null, {
+					label: 'Panel2'
 				});
-				tb = new Mt.MToolBar(p);
-				a = tb.addAction('aaa');
-				a.setIcon('/static/images/icons/accept.png');
-				btn1.addAction(a);
 				s = new Mt.MSlider(p, {
 					min: 50,
 					steps: true,
@@ -78,13 +70,9 @@
 					}
 				});
 				
-				a.addEvent('triggered', function() {
-					dlg.open();
-				})
-				
-				//dlg.open();
-				//dlg.center();
-				//x = new Mt.Resize(dlg)
+				dlg.open();
+				dlg.center();
+				x = new Mt.Resize(dlg.element)
 			})
 		</script>
 	</head>

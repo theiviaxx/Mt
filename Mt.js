@@ -1,4 +1,36 @@
+var Enum = new Class({
+	Implements: Options,
+	options: {},
+	initialize: function(vals, options) {
+		var i = 0;
+		vals.each(function(item) {
+			this.setOptions(options);
+			if (this.options[item]) {
+				this[item] = this.options[item];
+			}
+			else {
+				this[item] = i;
+				i += 1;
+			}
+		}, this);
+	}
+})
+
+
 var Mt = {};
+
+// Find image regex
+// string.test('(jpg|png|gif)')
+
+// Global Enums
+Mt.AspectRatioMode = new Enum(['IgnoreAspectRatio', 'KeepAspectRatio', 'KeepAspectRatioByExpanding'])
+Mt.ScrollBarPolicy = new Enum(['ScrollBarAsNeeded', 'ScrollBarAlwaysOff', 'ScrollBarAlwaysOn']);
+Mt.Orientation = new Enum(['Horizontal', 'Vertical']);
+Mt.ToolButtonStyle = new Enum(['ToolButtonIconOnly','ToolButtonTextOnly','ToolButtonTextBesideIcon','ToolButtonTextUnderIcon','ToolButtonFollowStyle']);
+
+// Window messages
+Mt.WindowURL_404 = "The URL requested was not found";
+Mt.WindowURL_500 = "The URL requested caused a server error";
 
 Mt.MObject = new Class({
 	initialize: function(parent) {
@@ -64,21 +96,21 @@ Mt.MSize = new Class({
 		if ($type(width) == 'number') {
 			width = width;
 			height = height;
-			ratioMode = ratioMode || 'ignore'
+			ratioMode = ratioMode || Mt.AspectRatioMode.IgnoreAspectRatio
 		}
 		else {
 			width = width.width;
 			height = width.height;
 			ratioMode = height;
 		}
-		var newSize = new Mt.Size();
+		var newSize = new Mt.MSize();
 		var ratio = width / height;
 		switch (ratioMode) {
-			case 'ignore':
+			case Mt.AspectRatioMode.IgnoreAspectRatio:
 				newSize.width = width;
 				newSize.height = height;
 				break;
-			case 'keep':
+			case Mt.AspectRatioMode.KeepAspectRatio:
 				if (ratio > 1.0) {
 					// wide
 					newSize.width = width;
@@ -90,7 +122,7 @@ Mt.MSize = new Class({
 					newSize.height = height;
 				}
 				break;
-			case 'expand':
+			case Mt.AspectRatioMode.KeepAspectRatioByExpanding:
 				if (ratio > 1.0) {
 					// wide
 					newSize.width = width * ratio;
@@ -119,27 +151,27 @@ Mt.MSize = new Class({
 Mt.MRect = new Class({
 	initialize: function(args) {
 		this.type = 'MRect';
-		if (args.length == 2) {
-			switch(args[1].type) {
+		if (arguments.length == 2) {
+			switch(arguments[1].type) {
 				case 'MPoint':
-					this.x = args[0].x;
-					this.y = args[0].y;
-					this.width = args[1].x - this.x;
-					this.height = args[1].y - this.y;
+					this.x = arguments[0].x;
+					this.y = arguments[0].y;
+					this.width = arguments[1].x - this.x;
+					this.height = arguments[1].y - this.y;
 					break;
 				case 'MSize':
-					this.x = args[0].x;
-					this.y = args[0].y;
-					this.width = args[1].width;
-					this.height = args[1].height;
+					this.x = arguments[0].x;
+					this.y = arguments[0].y;
+					this.width = arguments[1].width;
+					this.height = arguments[1].height;
 					break;
 			}
 		}
-		if (args.length == 4) {
-			this.x = args[0];
-			this.y = args[1];
-			this.width = args[2];
-			this.height = args[3];
+		if (arguments.length == 4) {
+			this.x = arguments[0];
+			this.y = arguments[1];
+			this.width = aargumentsrgs[2];
+			this.height = arguments[3];
 		}
 	}
 });
@@ -156,29 +188,35 @@ Mt.MWidget = new Class({
 	Extends: Mt.MObject,
 	Implements: [Events, Options],
 	options: {
-		onClose: $empty,
-		onMouseOver: $empty,
-		onMouseOut: $empty,
-		onMouseMove: $empty,
-		onFocus: $empty,
-		onBlur: $empty,
-		onMouseUp: $empty,
-		onMouseDown: $empty,
-		onClick: $empty,
-		onDoubleClick: $empty,
-		onMouseWheel: $empty,
-		onResize: $empty,
-		width: 500,
-		height: 500
+		onClose: function(){},
+		onMouseOver: function(){},
+		onMouseOut: function(){},
+		onMouseMove: function(){},
+		onFocus: function(){},
+		onBlur: function(){},
+		onMouseUp: function(){},
+		onMouseDown: function(){},
+		onClick: function(){},
+		onDoubleClick: function(){},
+		onMouseWheel: function(){},
+		onResize: function(){},
+		position: new Mt.MPoint(),
+		size: new Mt.MSize(500,500)
 	},
 	initialize: function(parent, options) {
 		this.parent(parent, options);
 		this.parentObj = (parent == null) ? $(document.body) : parent;
 		this.setOptions(options);
-		this.size = new Mt.MSize(this.options.width, this.options.height)
-		this.pos = new Mt.MPoint();
+		this.size = this.options.size;
+		this.pos = this.options.position;
 		this.geometry = new Mt.MRect(this.pos, this.size);
 		this.type = 'MWidget';
+		this.MWidget = true;
+		
+		this.focus = false;
+		this.enabled = true;
+		this.visible = true;
+		this.acceptsDrops = false;
 		
 		this.container = new Element('div', {
 			'load': {
@@ -187,9 +225,20 @@ Mt.MWidget = new Class({
 				}
 			}
 		});
-		this.container.addClass('MWidget');
+		this.container.addClass(this.type);
 		
-		this.element = new Element('div', {
+		this.element = this.__build();
+		this.element.inject(this.container);
+		
+		
+		if (this.parentObj != document.body) {
+			this.parentObj.children.push(this);
+		}
+	},
+	__build: function() {
+		// Override to build the HTML elements
+		// Should return element (DIV)
+		var element = new Element('div', {
 			events: {
 				'click': function(e) {
 					e.stop();
@@ -204,12 +253,11 @@ Mt.MWidget = new Class({
 				width: this.size.width,
 				height: this.size.height
 			}
-		}).inject(this.container);
+		});
 		
-		if (this.parentObj != document.body) {
-			this.parentObj.children.push(this);
-		}
+		return element;
 	},
+	binds: {},
 	close: function() {
 		this.fireEvent('onClose')
 		
@@ -224,362 +272,249 @@ Mt.MWidget = new Class({
 		
 		return this;
 	},
-	resize: function(width, height) {
+	isAncestorOf: function(widget) {
+		this.children.each(function(child) {
+			if (widget == child) {
+				return true;
+			}
+		})
+		
+		return false;
+	},
+	isEnabled: function() {
+		return this.enabled;
+	},
+	isVisible: function() {
+		return this.visible;
+	},
+	parentWidget: function() {
+		return this.parentObj;
+	},
+	render: function() {
+		this.element.setStyles({
+			width: this.geometry.width,
+			height: this.geometry.height,
+			top: this.geometry.y,
+			left: this.geometry.x
+		});
+		
+		return this;
+	},
+	resize: function(width, height, ratio) {
 		var newScale;
+		ratio = ratio || Mt.AspectRatioMode.IgnoreAspectRatio;
 		if ($type(width) == 'number') {
-			newScale = this.size.scale(width, height, 'keep');
+			newScale = this.size.scale(width, height, ratio);
 		}
 		else {
-			newScale = this.size.scale(width, 'keep')
+			newScale = this.size.scale(width, ratio)
 		}
+		this.geometry.width =  newScale.width;
+		this.geometry.height =  newScale.height;
+		this.render();
 		
 		this.fireEvent('onResize', newScale)
 		return newScale;
 	},
+	setAcceptsDrops: function(bool) {
+		this.acceptsDrops = bool
+	},
+	setEnabled: function(bool) {
+		bool = (bool == undefined) ? true : bool;
+		if (bool) {
+			if (this.disabledFrame) {
+				this.disabledFrame.destroy();
+			}
+			this.element.removeClass('MWidgetDisabled');
+		}
+		else {
+			this.disabledFrame = new Element('div', {'class':'MWidgetDisabledFrame'}).inject(this.container);
+			this.element.addClass('MWidgetDisabled');
+		}
+		this.render();
+		
+		return this
+	},
+	setFocus: function() {
+		
+	},
+	setGeometry: function(rect, h, x, y) {
+		if ($type(rect) == 'number') {
+			this.pos.x = x;
+			this.pos.y = y;
+			this.size.width = rect;
+			this.size.height = h;
+		}
+		else {
+			this.geometry = rect;
+		}
+		
+		return this;
+	},
+	setVisible: function(bool) {
+		this.visible = bool;
+		if (bool) {
+			this.element.show();
+		}
+		else {
+			this.element.hide();
+		}
+	},
+	setParent: function(widget) {
+		if (widget.MWidget) {
+			this.parentObj = widget;
+			widget.children.push(this);
+			$(widget).grab(this.element);
+			
+			return this;
+		}
+		throw("MWidget required")
+	},
+	show: function() {
+		
+	},
+	setSize: function(size, height) {
+		if ($type(size) == 'number') {
+			this.geometry.width = size;
+			this.geometry.height = height;
+		}
+		else {
+			this.geometry.width = size.width;
+			this.geometry.height = size.height;
+		}
+		this.render();
+		return this;
+	},
 	toElement: function() {
 		return this.element;
 	},
-})
-
-Mt.MDialog = new Class({
-	Extends: Mt.MWidget,
-	options: {
-		onOpen: $empty,
-		onClose: $empty,
-		width: 400,
-		height: 400,
-		top: 0,
-		left: 0,
-		label: '',
-		image: '../i/blank.png',
-		content: new Element('div'),
-		modal: true,
-		resize: false
-	},
-	initialize: function(parent, options) {
-		this.parent(parent, options);
-		this.size = new Mt.MSize(this.options.width, this.options.height);
-		this.pos = new Mt.MPoint(this.options.left, this.options.top);
-		this.type = 'MDialog';
-		this.container.addClass('MDialog');
-		this.container.setStyles({
-			width: this.size.width,
-			height: this.size.width,
-			display: 'none'
-		});
-		var contentElement = $(this.options.content);
-		this.content = (contentElement) ? contentElement : new Element('div', {'html': this.options.content});
-		this.content.addClass('MWidget');
-		this.content.setStyles({
-			width: '100%',
-			height: '100%',
-			position: 'absolute',
-			overflow: 'auto'
-		}).inject(this.element);
-		this.content.set('load', {
-			method: 'get',
-			onFailure: function(e) {
-				switch(e.status) {
-					case 404:
-						this.set('content', Mt.WindowURL_404);
-						break;
-					case 500:
-						this.set('content', Mt.WindowURL_500);
-						break;
-				}
-			}.bind(this)
-		})
-		
-		this.label = new Element('span', {
-			'class': 'label',
-			text: this.options.label
-		}).inject(this.container);
-		this.image = new Element('img', {
-			src: this.options.image,
-			styles: {
-				'margin-top': 2
-			}
-		}).inject(this.label, 'top');
-		
-		var actions = new Element('div', {'class':'actions'}).inject(this.container);
-		new Element('div', {events: {'click': this.close.bindWithEvent(this)}, styles: {},'class':'action close'}).inject(actions);
-		new Element('div', {styles: {},'class':'action minimize'}).inject(actions);
-		new Element('div', {styles: {},'class':'action maximize'}).inject(actions);
-		
-		this.container.inject(this.parentObj);
-		
-		if (this.options.resize) {
-			this.__sizeGrip();
-		}
-		
-		return this;
-	},
-	toElement: function() {
-		return this.content;
-	},
-	render: function(el) {
-		var el = el || this.container;
-		el.setStyles({
-			width: this.size.width,
-			height: this.size.height,
-			top: this.pos.y,
-			left: this.pos.x
-		})
-		
-		return this;
-	},
-	renderPreview: function(el) {
-		var el = el || this.container;
-		el.setStyles({
-			width: this.size.width,
-			height: this.size.height + 50
-		})
-		
-		return this;
-	},
-	center: function() {
-		this.pos.x = (window.getSize().x / 2) - (this.size.width / 2);
-		this.pos.y = (window.getSize().y / 2) - (this.size.height / 2);
-		
-		return this.render();
-	},
-	open: function() {
-		console.log('open')
-		new Drag.Move(this.container, {
-			handle: this.label,
-			onComplete: function(el, e) {
-				var pos = el.getPosition();
-				this.pos.x = pos.x;
-				this.pos.y = pos.y;
-			}.bind(this)
-		})
-		this.container.setStyle('display', 'block');
-		if (this.options.modal) {
-			this.mask = new Mask({hideOnClick: true});
-			this.mask.show();
-		}
-		this.render();
-		this.fireEvent('onOpen');
-		
-		return this;
-	},
-	close: function(e) {
-		console.log('close');
-		this.container.hide();
-		if (this.options.modal) {
-			this.mask.hide();
-		}
-		
-		return this;
-	},
-	destroy: function(e) {
-		$(this).destroy();
-	},
-	set: function(arg, value, url) {
-		var url = (url != undefined) ? true : false;
-		switch (arg) {
-			case 'content':
-				switch($type(value)) {
-					case 'string':
-						if (url) {
-							this.content.load(value);
-						}
-						else {
-							this.content.set('html', value);
-						}
-						break;
-					case 'element':
-						this.content.grab(value);
-						break;
-				}
-				break;
-			case 'label':
-				this.label.set('text', value.toString());
-				break;
-			case 'image':
-				this.image.set('src', value.toString());
-				break;
-		}
-	},
-	get: function(arg) {
-		switch (arg) {
-			case 'content':
-				return $(this.content)
-				break;
-			case 'label':
-				return this.label.get('text');
-				break;
-			case 'image':
-				return $(this.image);
-				break;
-		}
-	},
-	__sizeGrip: function() {
-		var grip = new Element('div', {
-			'class': 'MDialogSizeGrip'
-		});
-		var isMouseDown = false;
-		var pos = this.container.getPosition();
-		var self = this;
-		
-		grip.addEvent('mousedown', function(e) {
-			e.stop();
-			isMouseDown = true;
-			self.scalePreview = new Element('div', {'class':'MSizePreview'}).inject(self.container);
-		});
-		window.addEvent('mouseup', function(e) {
-			isMouseDown = false;
-			self.scalePreview.destroy();
-			self.render();
-		});
-		window.addEvent('mousemove', function(e) {
-			if (isMouseDown) {
-				var w = e.client.x - self.pos.x + 10;
-				var h = e.client.y - self.pos.y - 30;
-				if (w > 200) {
-					self.size.width = w;
-				}
-				if (h > 200) {
-					self.size.height = h;
-				}
-				self.renderPreview(self.scalePreview);
-			}
-		});
-		
-		grip.inject(this.container);
+	__postInit: function() {
+		// Method to do things after the parent init has gone through
+		// Must be explicitly called
 	}
-})
+});
 
-Mt.MButton = new Class({
+
+Mt.MFrame = new Class({
 	Extends: Mt.MWidget,
+	Shadow: new Enum(['Plain', 'Raised', 'Sunken']),
+	Shape: new Enum(['NoFrame', 'Box', 'Panel', 'WinPanel', 'HLine', 'VLine', 'StyledPanel']),
 	options: {
-		align: 'center',
-		icon: null,
-		label: '',
-		width: 'auto',
-		height: 14,
-		onClick: $empty
+		size: new Mt.MSize(200,80)
 	},
-	initialize: function(parent, options) {
+	initialize: function(parent, options){
 		this.parent(parent, options)
 		this.setOptions(options);
-		this.type = 'MButton';
-		this.isMouseDown = false;
-		this.isFocus = false;
+		this.type = 'MFrame';
+		this.shadow = this.Shadow.Plain;
+		this.shape = this.Shape.Box;
+		this.lineWidth = 1;
 		
-		var self = this;
-		this.element.addClass('MWidget MButton');
-		
-		this.element.setStyles({
-			height: this.options.height,
-			width: this.options.width,
-			'text-align': this.options.align
+		this.container.inject(this.parentObj);
+		this.container.addClass(this.type);
+		this.drawFrame();
+	},
+	drawFrame: function() {
+		this.container.setStyles({
+			width: this.geometry.width,
+			height: this.geometry.height,
+			top: this.geometry.y,
+			left: this.geometry.x,
+			'border-width': this.lineWidth
 		});
-		var f = new Element('div').inject(this.element);
-		f.setStyles({
-			height: this.size.height / 2 - 8
-		})
-		var floater = new Element('div', {'class':'vcenter'}).inject(this.element);
-		this.label = new Element('span', {text: this.options.label}).inject(floater);
-		if (this.options.icon) {
-			this.icon = new Element('img', {src: this.options.icon}).inject(this.label);
+		if (this.shadow > 0) {
+			this.container.addClass('MFrameShadow');
 		}
 		else {
-			this.icon = null;
+			this.container.removeClass('MFrameShadow');
 		}
-		
-		
-		
-		this.element.addEvent('mousedown', function(e) {
-			e.stop();
-			self.isMouseDown = true;
-			self.isFocus = true;
-			self.element.addClass('MButtonDown');
-		})
-		this.element.addEvent('mouseup', function(e) {
-			e.stop();
-			self.isMouseDown = false;
-			self.element.removeClass('MButtonDown');
-		});
-		this.element.addEvent('click', function(e) {
-			this.fireEvent('onClick', [e]);
-		})
-		
-		this.element.addEvent('mousemove', function(e) {
-			
-		})
-		this.container.addEvent('mouseleave', function(e) {
-			e.stop();
-			self.isFocus = false;
-		});
-		this.element.addEvent('mouseenter', function(e) {
-			e.stop();
-			self.isFocus = true;
-		});
-		
-		this.container.inject($(this.parentObj))
-		
+		if (this.shape == this.Shape.StyledPanel) {
+			this.container.addClass('MFrameRounded');
+		}
+		else {
+			this.container.removeClass('MFrameRounded');
+		}
 		
 		return this;
 	},
-	toElement: function() {
-		return this.container;
+	frameRect: function() {
+		return this.geometry;
 	},
-	set: function(arg, value) {
-		switch (arg) {
-			case 'label':
-				this.label.set('text', value.toString());
-				break;
-			case 'image':
-				if (!this.image) {
-					this.image = new Element('img').inject(this.container, 'top');
-					this.image.setStyle('height', this.size.height)
-				}
-				this.image.set('src', value.toString());
-				break;
-		}
+	frameShadow: function() {
+		return this.shadow;
 	},
-	get: function(arg) {
-		switch (arg) {
-			case 'label':
-				return this.label.get('text');
-				break;
-			case 'image':
-				return $(this.image);
-				break;
+	frameShape: function() {
+		return this.shape;
+	},
+	lineWidth: function() {
+		return this.lineWidth;
+	},
+	setFrameRect: function(rect) {
+		if (rect.width && rect.height && rect.x && rect.y) {
+			return this.set('geometry', rect);
+			return this;
 		}
+		
+		throw("Not a valid MRect object");
+	},
+	setFrameShadow: function(shadow) {
+		if ($type(shape) == 'number') {
+			return this.set('shadow', shadow);
+		}
+		
+		throw("Integer required");
+	},
+	setFrameShape: function(shape) {
+		if ($type(shape) == 'number') {
+			return this.set('shape', shape);
+		}
+		
+		throw("Integer required");
+	},
+	setLineWidth: function(width) {
+		if ($type(width) == 'number') {
+			return this.set('width', width);
+		}
+		
+		throw("Integer required");
+	},
+	set: function(arg, val) {
+		this[arg] = val;
+		
+		return this;
 	}
-})
+});
 
 Mt.MLineEdit = new Class({
 	Extends: Mt.MWidget,
 	options: {
 		align: 'left',
-		width: 'auto',
-		height: 22
+		size: new Mt.MSize(0, 22)
 	},
 	initialize: function(parent, options){
 		this.parent(parent, options)
 		this.setOptions(options);
-		this.size = new Mt.MSize(0, this.options.height);
 		this.type = 'MLineEdit';
 		
 		var self = this;
-		this.element = new Element('input', {'type': 'text', 'class': 'MLineEdit'}).inject(this.container);
-		this.element.addEvent('mouseover', function() {
-			self.element.addClass('MLineEditHover')
+		this.lineEdit = new Element('input', {'type': 'text', 'class': 'MLineEdit'}).inject(this.element);
+		this.lineEdit.addEvent('mouseover', function() {
+			self.lineEdit.addClass('MLineEditHover')
 		});
 		
 		this.container.inject(this.parentObj);
 	},
 	clear: function() {
-		this.element.value = '';
+		this.lineEdit.value = '';
+	},
+	setText: function(val) {
+		this.lineEdit.value = val.toString();
 	},
 	set: function(arg, value) {
 		switch (arg) {
 			case 'text':
 			case 'value':
-				this.element.value = value.toString();
+				this.lineEdit.value = value.toString();
 				break;
 		}
 	},
@@ -587,18 +522,129 @@ Mt.MLineEdit = new Class({
 		switch (arg) {
 			case 'text':
 			case 'value':
-				return this.element.value;
+				return this.lineEdit.value;
 				break;
 		}
 	}
 });
 
 
-Mt.MListWidget = new Class({
-	Extends: Mt.MWidget,
+Mt.MAbstractScrollArea = new Class({
+	Extends: Mt.MFrame,
 	options: {
-		width: 200,
-		height: 80,
+		
+	},
+	initialize: function(parent, options){
+		this.parent(parent, options)
+		this.setOptions(options);
+		this.type = 'MAbstractScrollArea';
+		
+		this.hscrolling = Mt.ScrollBarPolicy.ScrollBarAsNeeded;
+		this.vscrolling = Mt.ScrollBarPolicy.ScrollBarAsNeeded;
+		this.viewport = null;
+	},
+	horizontalScrollBarPolicy: function() {
+		return this.hscrolling;
+	},
+	verticalScrollBarPolicy: function() {
+		return this.vscrolling;
+	},
+	setHorizontalScrollBarPolicy: function(policy) {
+		if ($type(policy) == 'number') {
+			switch(policy) {
+				case Mt.ScrollBarPolicy.ScrollBarAsNeeded:
+					this.element.setStyle('overflow-x', 'auto');
+					break;
+				case Mt.ScrollBarPolicy.ScrollBarAlwaysOff:
+					this.element.setStyle('overflow-x', 'hidden');
+					break;
+				case Mt.ScrollBarPolicy.ScrollBarAlwaysOn:
+					this.element.setStyle('overflow-x', 'scroll');
+					break;
+			}
+			return this.set('hscrolling', policy)
+		}
+		throw "Integer required";
+	},
+	setVerticalScrollBarPolicy: function(policy) {
+		if ($type(policy) == 'number') {
+			switch(policy) {
+				case Mt.ScrollBarPolicy.ScrollBarAsNeeded:
+					this.element.setStyle('overflow-y', 'auto');
+					break;
+				case Mt.ScrollBarPolicy.ScrollBarAlwaysOff:
+					this.element.setStyle('overflow-y', 'hidden');
+					break;
+				case Mt.ScrollBarPolicy.ScrollBarAlwaysOn:
+					this.element.setStyle('overflow-y', 'scroll');
+					break;
+			}
+			return this.set('vscrolling', policy)
+		}
+		throw "Integer required";
+	},
+	setViewport: function(widget) {
+		if (widget.MWidget) {
+			widget.setParent(this.viewport);
+		}
+	}
+});
+
+
+Mt.MAbstractItemView = new Class({
+	Extends: Mt.MAbstractScrollArea,
+	ScrollMode: new Enum(['ScrollPerItem', 'ScrollPerPixel']),
+	SelectionBehavior: new Enum(['SelectItems', 'SelectRows', 'SelectColumns']),
+	SelectionMode: new Enum(['NoSelection', 'SingleSelection', 'MultiSelection', 'ExtendedSelection', 'ContiguousSelection']),
+	options: {
+		
+	},
+	initialize: function(parent, options){
+		this.parent(parent, options)
+		this.setOptions(options);
+		this.type = 'MCheckbox';
+		
+		this.selection = [];
+		this.selectionMode = this.SelectionMode.SingleSelection;
+		this.hScrollMode = this.ScrollMode.ScrollPerItem;
+		this.vScrollMode = this.ScrollMode.ScrollPerItem;
+		
+		this.container.inject(this.parentObj);
+	},
+	clearSelection: function() {
+		this.selection = [];
+	},
+	horizontalScrollMode: function() {
+		return this.hScrollMode;
+	},
+	verticalScrollMode: function() {
+		return this.vScrollMode;
+	},
+	setSelectionMode: function(mode) {
+		this.selectionMode = mode;
+	}
+});
+
+
+Mt.MListView = new Class({
+	Extends: Mt.MAbstractItemView,
+	options: {
+		
+	},
+	initialize: function(parent, options){
+		this.parent(parent, options)
+		this.setOptions(options);
+		this.type = 'MListView';
+		
+		this.container.inject(this.parentObj);
+	}
+});
+
+
+Mt.MListWidget = new Class({
+	Extends: Mt.MListView,
+	options: {
+		size: new Mt.MSize(200, 80),		
 		multiple: false
 	},
 	initialize: function(parent, options){
@@ -607,9 +653,16 @@ Mt.MListWidget = new Class({
 		this.type = 'MListWidget';
 		
 		this.items = [];
-		this.element.addClass('MListWidget MFrame');
+		this.selection = [];
+		this.element.addClass('MListWidget');
 		
 		this.container.inject(this.parentObj);
+		this.container.addClass(this.type);
+		
+		this.container.addEvent('mousedown', function(e) {
+			e.stop();
+			
+		})
 	},
 	addItem: function(arg) {
 		return this.insertItem(this.items.length, arg);
@@ -622,6 +675,9 @@ Mt.MListWidget = new Class({
 			item.unselect();
 		})
 	},
+	clearSelection: function() {
+		this.items.each(function(item) {item.unselect()});
+	},
 	insertItem: function(index, item) {
 		var self = this;
 		if ($type(item) == 'string') {
@@ -629,11 +685,12 @@ Mt.MListWidget = new Class({
 		}
 		item.parentObj = $(this);
 		item.addEvent('click', function(e) {
+			e.stop();
 			if (e.control) {
-				self.unselect(this);
+				self.unselect(this, e);
 			}
 			else {
-				self.select(this);
+				self.select(this, e);
 			}
 			
 		});
@@ -656,7 +713,7 @@ Mt.MListWidget = new Class({
 		return this.items[index];
 	},
 	indexFromItem: function(item) {
-		return this.items.contains(item);
+		return this.items.indexOf(item);
 	},
 	pop: function(index) {
 		var item = (index) ? this.items[index] : this.items.getLast();
@@ -670,7 +727,7 @@ Mt.MListWidget = new Class({
 	},
 	removeItem: function(item) {
 		item.destroy();
-		this.items.erase(item);
+		//this.items.erase(item);
 	},
 	scrollToItem: function(item) {
 		$(this).scrollTo(0, this.indexFromItem(item) * 14);
@@ -682,11 +739,41 @@ Mt.MListWidget = new Class({
 			$(item).inject($(this), 'bottom')
 		}, this)
 	},
-	select: function(item) {
-		if (!this.options.multiple) {
-			this.items.each(function(item) {item.unselect()});
+	select: function(item, e) {
+		switch (this.selectionMode) {
+			case this.SelectionMode.NoSelection:
+				//pass
+				break;
+			case this.SelectionMode.SingleSelection:
+				this.clearSelection();
+				item.select();
+				break;
+			case this.SelectionMode.MultiSelection:
+				item.select();
+				break;
+			case this.SelectionMode.ExtendedSelection:
+				break;
+			case this.SelectionMode.ContiguousSelection:
+			
+				this.clearSelection();
+				item.select();
+				if (e.shift) {
+					var index = this.indexFromItem(item);
+					var i = (index < 2) ? 0 : index - 1;
+					
+					while(this.items[i].isSelected == false) {
+						this.items[i].select();
+						i--;
+						if (i < 0) {
+							break;
+						}
+					}
+					
+				}
+				break;
 		}
-		item.select();
+		
+		return this;
 	},
 	unselect: function(item) {
 		item.unselect();
@@ -809,6 +896,130 @@ Mt.MListWidgetItem = new Class({
 	}
 });
 
+
+Mt.MAction = new Class({
+	Extends: Mt.MObject,
+	options: {
+		label: '',
+		icon: null
+	},
+	initialize: function(parent, options){
+		this.parent(parent, options)
+		this.setOptions(options);
+		this.type = 'MAction';
+		
+		this.checkable = false;
+		this.checked = false;
+		this.enabled = true;
+		this.separator = false;
+		this.visible = true;
+		
+		this.container.inject(this.parentObj);
+	},
+	isCheckable: function() { return this.checkable; },
+	isChecked: function() { return this.checked; },
+	isEnabled: function() { return this.enabled; },
+	isSeparator: function() { return this.separator; },
+	
+	isVisible: function() { return this.visible; },
+	setCheckable: function(bool) {
+		this.cheackable = bool;
+	},
+	setchecked: function(bool) {
+		this.checked = bool;
+	},
+	setEnabled: function(bool) {
+		if (bool) {
+			if (this.disabledFrame) {
+				this.disabledFrame.destroy();
+			}
+			this.element.removeClass('MWidgetDisabled');
+		}
+		else {
+			this.disabledFrame = new Element('div', {'class':'MWidgetDisabledFrame'}).inject(this.container);
+			this.element.addClass('MWidgetDisabled');
+		}
+		
+		return this;
+	},
+	setIcon: function(icon) {
+		
+	},
+	setSeparator: function(bool) {
+		
+	},
+	setText: function(text) {
+		
+	},
+	setVisible: function(bool) {
+		if (bool) {
+			this.element.show();
+		}
+		else {
+			this.element.hide();
+		}
+	},
+	toggle: function() {
+		this.checked = (this.checked) ? false : true;
+	}
+});
+
+
+Mt.MToolbar = new Class({
+	Extends: Mt.MWidget,
+	options: {
+		onResize: function(){}
+	},
+	initialize: function(parent, options){
+		this.parent(parent, options)
+		this.setOptions(options);
+		this.type = 'MToolbar';
+		
+		this.container.inject(this.parentObj);
+	},
+	addAction: function() {
+		
+	},
+	addSeparator: function() {
+		
+	},
+	addWidget: function(widget) {
+		
+	},
+	insertSeparator: function(index) {
+		
+	},
+	insertWidget: function(index, widget) {
+		
+	}
+});
+
+
+Mt.MGroupBox = new Class({
+	Extends: Mt.MWidget,
+	options: {
+		label: 'GroupBox',
+		size: new Mt.MSize('auto', 'auto')
+	},
+	initialize: function(parent, options){
+		this.parent(parent, options)
+		this.setOptions(options);
+		this.type = 'MGroupBox';
+		
+		// Member variables
+		this.element.destroy();
+		this.element = new Element('fieldset').inject(this.container);
+		this.label = new Element('legend', {'text': this.options.label}).inject(this.element);
+		
+		// Final injection into DOM
+		this.container.inject(this.parentObj);
+	},
+	setTitle: function(title) {
+		this.label.set('text', title);
+	}
+});
+
+
 Mt.MTemplate = new Class({
 	Extends: Mt.MWidget,
 	options: {
@@ -819,18 +1030,23 @@ Mt.MTemplate = new Class({
 		this.setOptions(options);
 		this.type = 'MCheckbox';
 		
+		// Member variables
+		
+		// Final injection into DOM
 		this.container.inject(this.parentObj);
 	}
 });
 
 // TODO
+
 // Disabled state
-Mt.MListWidget;
 Mt.MSpinBox;
-Mt.MSlider;
 Mt.MComboBox;
 Mt.MPanel;
 Mt.MRollout;
 Mt.MTab;
 Mt.MToolBar;
+Mt.MenuBar;
+Mt.Menu;
+Mt.MAction;
 

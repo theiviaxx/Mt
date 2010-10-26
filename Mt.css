@@ -1,108 +1,179 @@
 /****************************************
- * Window 2200
- * Button 2100
+ * Window 200
+ * Button 100
  ***************************************/
+.MRowEven { background-color: #E4F2FF;}
+.MWidgetDisabled {
+	background-position:0px -149px;
+    background-color: #e3e3e3;
+    border: solid 1px #c9c9c9;
+    color: #696969;
+    box-shadow:0px 0px 0px rgba(0,0,0,0);
+    -webkit-box-shadow:0px 0px 0px rgba(0,0,0,0);
+    -moz-box-shadow: 0px 0px 0px rgba(0,0,0,0);
+}
+.MWidgetDisabledFrame {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
 .MWidget {
+	position: relative;
+	display:inline-block;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10pt;
 }
-.MDialog {
-	position: absolute;
-	text-align: left;
-	padding: 0px;
-	background: #fff;
-	border-width: 25px 1px;
-	z-index: 2200;
-	-webkit-border-image: url('i/window.png') 25 1 25 1 stretch stretch;
+.MFrame {
+	border: 1px solid #769DC0;
+	margin: 2px;
+}
+.MFrameShadow {
 	-webkit-box-shadow: 0px 2px 8px rgba(0,0,0,0.3);
 }
-	.MDialog span.label {
+.MFrameRounded {
+	-webkit-border-radius: 2px;
+}
+.MPanel {
+	display: block;
+	position: relative;
+	text-align: left;
+	padding: 0px;
+	border-width: 25px 3px 20px 3px;
+	-webkit-border-image: url('i/window2.png') 25 3 20 3 stretch stretch;
+}
+.MDialog {
+	position: absolute;
+	z-index: 2200;
+	-webkit-box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
+}
+.MPanelStatusBar {
+	-webkit-border-image: url('i/window2_statusBar.png') 25 3 20 3 stretch stretch;
+}
+	.MPanel span.label {
 		position: absolute;
 		top: -25px;
 		width: 100%;
 		height: 25px;
 		font-size: 10pt;
+		color: #15428B;
 		text-shadow: 1px 1px 2px #fff;
-		text-align: center;
-		cursor: pointer;
+		text-align: left;
+		margin-top: 4px;
+		line-height: 18px;
+		padding-left: 18px;
 	}
-		.MDialog span.label img {
+		.MPanel span.label img {
+			position:absolute;
+			top: 0px;
+			left: 0px;
 			width: 16px;
 			height: 16px;
 		}
+	.MDialog span.label {
+		cursor: move;
+	}
 	.MDialog div.actions {
 		position: absolute;
 		top: -20px;
+		right: 0px;
 		
 	}
 	.MDialog div.action {
-		float: left;
-		width: 16px;
-		height: 16px;
-		margin-right: 2px;
+		float: right;
+		width: 14px;
+		height: 14px;
+		margin: 2px;
 		cursor: pointer;
-		background: url('i/action_button.png') top left no-repeat;
+		background: url('i/dialogActions.png') top left no-repeat;
 	}
-		.MDialog div.close:hover {
-			background: url('i/action_button.png') -16px left no-repeat;
-		}
-		.MDialog div.minimize:hover {
-			background: url('i/action_button.png') -32px left no-repeat;
-		}
-		.MDialog div.maximize:hover {
-			background: url('i/action_button.png') -48px left no-repeat;
-		}
+		.MDialog div.close { background-position: top 0px; }
+		.MDialog div.close:hover { background-position: bottom 0px; }
+		.MDialog div.minimize { background-position: top -14px; }
+		.MDialog div.minimize:hover { background-position: bottom -14px; }
+		.MDialog div.maximize { background-position: top -42px; }
+		.MDialog div.maximize:hover { background-position: bottom -42px; }
+		.MDialog div.restore { background-position: top -28px; }
+		.MDialog div.restore:hover { background-position: bottom -28px; }
+	.MPanel .MStatusBar {
+		margin-top: 2px;
+		width: 100%;
+		height: 16px;
+	}
+.MDialogMaximizeFrame {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
 .MSizePreview {
 	position: absolute;
 	top: -25px;
-	left: -1px;
+	left: -2px;
 	width: 100%;
 	height: 100%;
 	border: 1px dashed #769DC0;
 }
 .MDialogSizeGrip {
 	position: absolute;
-	bottom: -20px;
+	bottom: -18px;
 	right: 0px;
-	width: 20px;
-	height: 20px;
+	width: 13px;
+	height: 13px;
 	background: url('i/sizeGrip.png') no-repeat;
-	cursor: nw-resize;
-	
+	cursor: nw-resize;	
 }
-.MFrame {
-	border: 1px solid #769DC0;
-	margin: 2px;
-}
+	.MDialog .MDialogResizeContainer { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; }
+	.MDialog .MDialogResizeContainer div { position:absolute; }
+		.MResizeHandleN { top: -28px; left: 0px; width: 100%; height:6px; cursor: n-resize;}
+		.MResizeHandleE { top: 0px; right: -6px; width: 6px; height:100%; cursor: e-resize; }
+		.MResizeHandleS { bottom: -22px; left: 0px; width: 100%; height:6px; cursor: s-resize; }
+		.MResizeHandleW { top: 0px; left: -6px; width: 6px; height:100%; cursor: w-resize; }
+		.MResizeHandleNE { top: -28px; right: -6px; width: 6px; height:6px; cursor: ne-resize; }
+		.MResizeHandleNW { top: -28px; left: -6px; width: 6px; height:6px; cursor: nw-resize; }
+		.MResizeHandleSE { bottom: -22px; right: -6px; width: 6px; height:6px; cursor: se-resize; }
+		.MResizeHandleSW { bottom: -22px; left: -6px; width: 6px; height:6px; cursor: sw-resize; }
 .MButton {
 	display: inline-block;
 	text-align: center;
 	font-size: 10px;
-	margin: 2px;
-	padding: 2px 4px 4px;
+	margin: 0px;
+	padding: 4px 4px 4px;
 	border: 1px solid #769DC0;
-	background-color: #E4F2FF;
-	background-image: url('i/button.png');
-	background-position: 50% 0%;
-	background-repeat: repeat-x;
+	background: #E4F2FF url('i/button.png') 50% 0% repeat-x;
 	-webkit-border-radius: 4px;
 	-webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.148438);
 	cursor: pointer;
 }
-.MButton:hover {
+.MButtonFlat {
+	border-color: transparent;
+	background: none;
+	-webkit-box-shadow: none;
+}
+.MButton:hover, .MButtonFlat:hover {
+	background: url('i/button.png') 50% 0% repeat-x;
+	border-color: #769DC0;
 	-webkit-transition-duration: 0.3s;
 	-webkit-transition-property: background-color;
 	background-color: #99cfff;
 }
-.MButtonOut {
+.MButtonOut, .MButtonFlatOut {
 	-webkit-transition-duration: 0.3s;
 	-webkit-transition-property: background-color;
 	background-color: #E4F2FF;
 }
-.MButtonDown {
+.MButtonDown, .MButtonFlatDown {
+	background: url('i/button.png') 50% 0% repeat-x;
+	border-color: #769DC0;
 	-webkit-transition-duration: 0.3s;
 	-webkit-transition-property: -webkit-box-shadow;
 	-webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.148438);
+	
+	-webkit-transition-duration: 0.3s;
+	-webkit-transition-property: background-color;
+	background-color: #8bbce8;
 }
 	.MButton img {
 		margin-top: 0px;
@@ -112,16 +183,11 @@
 	}
 	.MButton img {
 		position: relative;
-		float: left;
-		margin-right: 2px;
 	}
-	.MButton span {
-		clear:both;
-		/*display: inline-block;*/
+	.MButton div:last-child div {
 		position: relative;
-		width: 100%;
-		height: 100%;
-		vertical-align: middle;
+		float: right;
+		margin: 0px 2px;
 	}
 .MLineEdit {
 	border: 1px solid #B5BCC7;
@@ -140,13 +206,89 @@
 .MListWidgetItem {
 	cursor:default;
 	height: 16px;
+	padding: 1px;
 }
+	.MListWidgetItem span {
+		margin: 0px 2px;
+	}
+	.MListWidgetItem:hover {
+		padding: 0px;
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FDFEFF), to(#FDFEFF), color-stop(.9,#EDF5FF));
+		border: 1px solid #b9d7fc;
+		-webkit-border-radius: 2px;
+	}
 .MListItemWidgetSelected {
-	color: #fff;
-	background: #99cfff;
+	padding: 0px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F2F8FF), to(#DFEEFF), color-stop(.9,#d0e5ff));
+	border: 1px solid #b9d7fc;
+	-webkit-border-radius: 2px;
 }
+	.MListItemWidgetSelected:hover {
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EBF4FD), to(#DBEAFD), color-stop(.9,#c2dcfd));
+		border-color: #7da2ce;
+	}
 
 .mask {
 	background: rgba(0,0,0,0.3);
 	z-index: 1000;
+}
+
+.MSlider {
+	
+}
+	.MSlider > div {
+		position: relative;
+		float: left;
+	}
+.MSliderArea {
+	height: 4px;
+	border: 1px solid #B5BCC7;
+	background: #CFE5FA;
+}
+	.MSliderArea:hover {  }
+.MSliderGrip {
+	top: -4px;
+	width: 16px;
+	height: 15px;
+	background: url('i/MSlider.png') -22px -0px no-repeat;
+}
+	.MSliderGrip:hover { background: url('i/MSlider.png') -22px -15px no-repeat;cursor: pointer; }
+.MSliderStepLeft {
+	width: 11px;
+	height: 14px;
+	background: url('i/MSlider.png') -11px -0px no-repeat;
+}
+	.MSliderStepLeft:hover { background: url('i/MSlider.png') -11px -14px no-repeat;cursor: pointer; }
+.MSliderStepRight {
+	width: 11px;
+	height: 14px;
+	background: url('i/MSlider.png') -0px -0px no-repeat;
+}
+	.MSliderStepRight:hover { background: url('i/MSlider.png') -0px -14px no-repeat;cursor: pointer; }
+
+.MToolBar {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#DAE6F4), to(#CEDDEF));
+	border-top: 1px solid #f0f5fa;
+	border-bottom: 1px solid #a9bfd3;
+}
+.MAction {
+	display: inline-block;
+	text-align: center;
+	font-size: 10px;
+	margin: 2px;
+	padding: 2px 4px 4px;
+	border: 1px solid #DAE6F4;
+	-webkit-border-radius: 4px;
+	cursor: pointer;
+}
+.MAction:hover {
+	border-color: #769DC0;
+	background-image: url('i/button.png');
+	background-position: 50% 0%;
+	background-color: #E4F2FF;
+}
+.MActionSeparator {
+	width: 20px;
+	height: 100%;
+	background: url('i/separator.gif') no-repeat;
 }

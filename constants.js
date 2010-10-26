@@ -1,6 +1,7 @@
-Mt.IgnoreAspectRatio = 0;
-Mt.KeepAspectRatio = 1;
-Mt.KeepAspectRatioByExpanding = 2;
+
+
+Mt.AspectRatioMode = new Enum(['IgnoreAspectRatio', 'KeepAspectRatio', 'KeepAspectRatioByExpanding'])
+Mt.ScrollBarPolicy = new Enum(['ScrollBarAsNeeded', 'ScrollBarAlwaysOff', 'ScrollBarAlwaysOn']);
 
 // Window messages
 Mt.WindowURL_404 = "The URL requested was not found";
