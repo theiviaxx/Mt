@@ -639,7 +639,7 @@ Lasso.Crop = new Class({
 });
 */
 
-Mt.DialogActions = new Enum(['Close', 'Maximize', 'Minimize']);
+Mt.DialogActions = new Enum('Close Maximize Minimize');
 
 Mt.MPanel = new Class({
 	Extends: Mt.MWidget,
@@ -665,7 +665,7 @@ Mt.MPanel = new Class({
 		this.container.addClass('MPanel');
 		this.container.setStyles({
 			width: this.size.width,
-			height: this.size.width
+			height: this.size.height
 		});
 		if (this.options.statusBar) {
 			this.container.addClass('MPanelStatusBar');
@@ -801,8 +801,9 @@ Mt.MDialog = new Class({
 		if (this.options.actions.contains(Mt.DialogActions.Close)) {
 			new Element('div', {
 				events: {
-					'click': function(e) {
-						this.close.bind(this)
+					'click': function(e){
+						this.close()
+					}.bind(this)
 				},
 				styles: {},
 				'class':'action close'
@@ -814,8 +815,8 @@ Mt.MDialog = new Class({
 				'class':'action maximize',
 				'events': {
 					'click': function(e){
-						this.maximize.bind(this, [e]);
-					}
+						this.maximize();
+					}.bind(this)
 				}
 			}).inject(actions);
 		}

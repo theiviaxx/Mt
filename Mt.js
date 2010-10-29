@@ -1,12 +1,11 @@
 var Enum = new Class({
-	Implements: Options,
-	options: {},
-	initialize: function(vals, options) {
+	initialize: function(vals, order) {
 		var i = 0;
-		vals.each(function(item) {
-			this.setOptions(options);
-			if (this.options[item]) {
-				this[item] = this.options[item];
+		order = order || '';
+		order = order.split();
+		vals.split().each(function(item) {
+			if (order[item]) {
+				this[item] = order[item];
 			}
 			else {
 				this[item] = i;
@@ -23,10 +22,10 @@ var Mt = {};
 // string.test('(jpg|png|gif)')
 
 // Global Enums
-Mt.AspectRatioMode = new Enum(['IgnoreAspectRatio', 'KeepAspectRatio', 'KeepAspectRatioByExpanding'])
-Mt.ScrollBarPolicy = new Enum(['ScrollBarAsNeeded', 'ScrollBarAlwaysOff', 'ScrollBarAlwaysOn']);
-Mt.Orientation = new Enum(['Horizontal', 'Vertical']);
-Mt.ToolButtonStyle = new Enum(['ToolButtonIconOnly','ToolButtonTextOnly','ToolButtonTextBesideIcon','ToolButtonTextUnderIcon','ToolButtonFollowStyle']);
+Mt.AspectRatioMode = new Enum('IgnoreAspectRatio KeepAspectRatio KeepAspectRatioByExpanding');
+Mt.ScrollBarPolicy = new Enum('ScrollBarAsNeeded ScrollBarAlwaysOff ScrollBarAlwaysOn');
+Mt.Orientation = new Enum('Horizontal Vertical');
+Mt.ToolButtonStyle = new Enum('ToolButtonIconOnly ToolButtonTextOnly ToolButtonTextBesideIcon ToolButtonTextUnderIcon ToolButtonFollowStyle');
 
 // Window messages
 Mt.WindowURL_404 = "The URL requested was not found";
@@ -397,8 +396,8 @@ Mt.MWidget = new Class({
 
 Mt.MFrame = new Class({
 	Extends: Mt.MWidget,
-	Shadow: new Enum(['Plain', 'Raised', 'Sunken']),
-	Shape: new Enum(['NoFrame', 'Box', 'Panel', 'WinPanel', 'HLine', 'VLine', 'StyledPanel']),
+	Shadow: new Enum('Plain Raised Sunken'),
+	Shape: new Enum('NoFrame Box Panel WinPanel HLine VLine StyledPanel'),
 	options: {
 		size: new Mt.MSize(200,80)
 	},
@@ -593,9 +592,9 @@ Mt.MAbstractScrollArea = new Class({
 
 Mt.MAbstractItemView = new Class({
 	Extends: Mt.MAbstractScrollArea,
-	ScrollMode: new Enum(['ScrollPerItem', 'ScrollPerPixel']),
-	SelectionBehavior: new Enum(['SelectItems', 'SelectRows', 'SelectColumns']),
-	SelectionMode: new Enum(['NoSelection', 'SingleSelection', 'MultiSelection', 'ExtendedSelection', 'ContiguousSelection']),
+	ScrollMode: new Enum('ScrollPerItem ScrollPerPixel'),
+	SelectionBehavior: new Enum('SelectItems SelectRows SelectColumns'),
+	SelectionMode: new Enum('NoSelection SingleSelection MultiSelection ExtendedSelection ContiguousSelection'),
 	options: {
 		
 	},
@@ -1042,11 +1041,11 @@ Mt.MTemplate = new Class({
 // Disabled state
 Mt.MSpinBox;
 Mt.MComboBox;
-Mt.MPanel;
+//Mt.MPanel;
 Mt.MRollout;
 Mt.MTab;
-Mt.MToolBar;
+//Mt.MToolBar;
 Mt.MenuBar;
 Mt.Menu;
-Mt.MAction;
+//Mt.MAction;
 

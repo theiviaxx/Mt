@@ -143,6 +143,8 @@
 	padding: 4px 4px 4px;
 	border: 1px solid #769DC0;
 	background: #E4F2FF url('i/button.png') 50% 0% repeat-x;
+	-webkit-transition-duration: 0.3s;
+	-webkit-transition-property: background-color;
 	-webkit-border-radius: 4px;
 	-webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.148438);
 	cursor: pointer;
@@ -193,6 +195,8 @@
 	border: 1px solid #B5BCC7;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10px;
+	-webkit-transition-duration: 0.3s;
+	-webkit-transition-property: background-color, border;
 }
 .MLineEdit:hover {
 	-webkit-transition-duration: 0.3s;
@@ -271,6 +275,9 @@
 	border-top: 1px solid #f0f5fa;
 	border-bottom: 1px solid #a9bfd3;
 }
+	.MToolBar > div {
+		float:left;
+	}
 .MAction {
 	display: inline-block;
 	text-align: center;

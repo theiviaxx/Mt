@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="../Mt.MButton.js"></script>
 		<script type="text/javascript" src="../Mt.MSlider.js"></script>
 		<script type="text/javascript" src="../Mt.MToolBar.js"></script>
-		<script type="text/javascript" src="../Mt.MSpinBox.js"></script>
+		<script type="text/javascript" src="../constants.js"></script>
 		
 		<script type="text/javascript">
 			var dlg, btn, btn1, l, le, s, x, p, tb, a;

@@ -3,7 +3,7 @@
 Mt.MAction = new Class({
 	Extends: Mt.MObject,
 	Implements: [Options, Events],
-	ActionEvent: new Enum(['Trigger', 'Hover']),
+	ActionEvent: new Enum('Trigger Hover'),
 	options: {
 		onChange: function(){},
 		onHover: function(){},
@@ -104,6 +104,9 @@ Mt.MAction = new Class({
 	},
 	setSeparator: function(bool) {
 		this.separator = bool;
+		this.associatedWidgets.each(function(widget) {
+			widget.setText('');
+		}, this);
 	},
 	setShortcut: function(string) {
 		this.shortcut = string;
@@ -125,6 +128,7 @@ Mt.MAction = new Class({
 		this.setChecked((this.checked) ? false : true);
 	}
 });
+
 
 Mt.MToolBar = new Class({
 	Extends: Mt.MWidget,
