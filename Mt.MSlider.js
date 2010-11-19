@@ -14,8 +14,6 @@ Mt.MAbstractSlider = new Class({
 	},
 	initialize: function(parent, options){
 		this.parent(parent, options)
-		this.setOptions(options);
-		this.type = 'MAbstractSlider';
 		
 		// Member variables
 		this.isSliderDown = false;
@@ -25,10 +23,10 @@ Mt.MAbstractSlider = new Class({
 		this.value = this.minimum;
 		this.singleStepSize = 1;
 		this.pageStepSize = 10;
-		
-		
-		// Final injection into DOM
-		this.container.inject(this.parentObj);
+	},
+	__type: function() {
+		this.type = 'MAbstractSclider';
+		return this.type;
 	},
 	pageStep: function() {
 		
@@ -69,11 +67,28 @@ Mt.MSlider = new Class({
 	},
 	initialize: function(parent, options){
 		this.parent(parent, options)
-		this.setOptions(options);
-		this.type = 'MSlider';
 		
 		// Member variables
-		// Elements
+		
+		this.slider = new Slider(this.area, this.grip, {
+			mode: (this.orientation == Mt.Orientation.Horizontal) ? 'horizontal' : 'vertical',
+			range: [this.minimum, this.maximum],
+			onChange: function(val) {
+				this.value = val;
+				this.fireEvent('onValueChanged', [val])
+			}.bind(this)
+		});
+	},
+	__type: function() {
+		this.type = 'MSlider';
+		return this.type;
+	},
+	__build: function() {
+		var element = new Element('div', {
+			events: this.events,
+			'class': this.type
+		});
+		
 		if (this.options.steps) {
 			this.stepLeft = new Element('div', {
 				'class': 'MSliderStepLeft',
@@ -83,12 +98,12 @@ Mt.MSlider = new Class({
 						this.singleStep(false);
 					}.bind(this)
 				}
-			}).inject(this.element);
+			}).inject(element);
 		}
 		
-		this.area = new Element('div', {'class': 'MSliderArea'}).inject(this.element);
+		this.area = new Element('div', {'class': 'MSliderArea'}).inject(element);
 		this.area.setStyles({
-			width: (this.options.steps) ? this.size.width - 32 : this.size.width,
+			width: (this.options.steps) ? this.size().width - 32 : this.size().width,
 			top: 4,
 			margin: "0px 4px"
 		});
@@ -103,23 +118,10 @@ Mt.MSlider = new Class({
 						this.singleStep(true);
 					}.bind(this)
 				}
-			}).inject(this.element);
+			}).inject(element);
 		}
 		
-		
-		this.element.addClass(this.type)
-		
-		// Final injection into DOM
-		this.container.inject(this.parentObj);
-		
-		this.slider = new Slider(this.area, this.grip, {
-			mode: (this.orientation == Mt.Orientation.Horizontal) ? 'horizontal' : 'vertical',
-			range: [this.minimum, this.maximum],
-			onChange: function(val) {
-				this.value = val;
-				this.fireEvent('onValueChanged', [val])
-			}.bind(this)
-		});
+		return element;
 	},
 	pageStep: function(dir) {
 		if (dir == undefined || dir == true) {

@@ -654,7 +654,6 @@ Mt.MPanel = new Class({
 	},
 	initialize: function(parent, options){
 		this.parent(parent, options)
-		this.type = 'MPanel';
 		
 		// Member variables
 		this.text = this.options.text;
@@ -663,10 +662,6 @@ Mt.MPanel = new Class({
 		this.icon = new Element('img', {src: this.iconSrc, styles: {'margin-top': 2}});
 		
 		this.container.addClass('MPanel');
-		this.container.setStyles({
-			width: this.size.width,
-			height: this.size.height
-		});
 		if (this.options.statusBar) {
 			this.container.addClass('MPanelStatusBar');
 			this.statusBar = new Element('div').inject(this.container);
@@ -678,9 +673,17 @@ Mt.MPanel = new Class({
 		
 		this.label.inject(this.container);
 		this.icon.inject(this.label, 'top');
+	},
+	__type: function() {
+		this.type = 'MPanel';
+		return this.type;
+	},
+	__build: function() {
+		var element = new Element('div', {
+			events: this.events
+		});
 		
-		// Final injection into DOM
-		this.container.inject(this.parentObj);
+		return element;
 	},
 	toElement: function() {
 		return this.content;
@@ -765,9 +768,6 @@ Mt.MPanel.Request = new Class({
 			}.bind(this)
 		});
 		
-		// Final injection into DOM
-		this.container.inject(this.parentObj);
-		
 		if (this.options.contentURL) {
 			this.content.load(this.options.contentURL);
 		}
@@ -792,7 +792,6 @@ Mt.MDialog = new Class({
 	},
 	initialize: function(parent, options) {
 		this.parent(parent, options);
-		this.type = 'MDialog';
 		
 		this.isMaximized = false;
 		
@@ -825,7 +824,6 @@ Mt.MDialog = new Class({
 		}
 		
 		this.container.hide()
-		this.container.inject(this.parentObj);
 		
 		if (this.options.resize) {
 			//this.__sizeGrip();
@@ -833,6 +831,10 @@ Mt.MDialog = new Class({
 		//this.buildResize();
 		
 		return this;
+	},
+	__type: function() {
+		this.type = 'MDialog';
+		return this.type;
 	},
 	buildResize: function() {
 		var resizeContainer = new Element('div', {'class': 'MDialogResizeContainer'});
@@ -851,8 +853,8 @@ Mt.MDialog = new Class({
 		resizeContainer.inject(this.container);
 	},
 	center: function() {
-		this.pos.x = (window.getSize().x / 2) - (this.size.width / 2);
-		this.pos.y = (window.getSize().y / 2) - (this.size.height / 2);
+		this.pos.x = (window.getSize().x / 2) - (this.size().width / 2);
+		this.pos.y = (window.getSize().y / 2) - (this.size().height / 2);
 		
 		return this.render();
 	},
@@ -875,16 +877,16 @@ Mt.MDialog = new Class({
 		
 		if (!this.isMaximized) {
 			this.floatSize = {
-				w: this.size.width,
-				h: this.size.height,
+				w: this.size().width,
+				h: this.size().height,
 				x: this.pos.x,
 				y: this.pos.y
 			};
 		}
 		
 		if (up) {
-			this.size.width = winSize.x - 6;
-			this.size.height = winSize.y - 45;
+			this.size().width = winSize.x - 6;
+			this.size().height = winSize.y - 45;
 			this.pos.x = 0;
 			this.pos.y = 0;
 			document.body.setStyle('overflow', 'hidden');
@@ -892,8 +894,8 @@ Mt.MDialog = new Class({
 			this._btnMaximize.addClass('restore');
 		}
 		else {
-			this.size.width = this.floatSize.w;
-			this.size.height = this.floatSize.h;
+			this.size().width = this.floatSize.w;
+			this.size().height = this.floatSize.h;
 			this.pos.x = this.floatSize.x;
 			this.pos.y = this.floatSize.y;
 			this.isMaximized = false;
@@ -921,11 +923,14 @@ Mt.MDialog = new Class({
 					var offset = (this.floatSize.w * (e.client.x / window.getWidth()));
 					this.pos.x = e.client.x;
 					
-					this.size.width = this.floatSize.w;
-					this.size.height = this.floatSize.h;
+					this.size().width = this.floatSize.w;
+					this.size().height = this.floatSize.h;
 					this.render();
 					this._btnMaximize.removeClass('restore');
 				}
+			}.bind(this),
+			onDrag: function(e) {
+				this.fireEvent('onMoveEvent', [e]);
 			}.bind(this)
 		})
 		this.container.setStyle('display', 'block');
@@ -941,8 +946,8 @@ Mt.MDialog = new Class({
 	render: function(el) {
 		var el = el || this.container;
 		el.setStyles({
-			width: this.size.width,
-			height: this.size.height,
+			width: this.size().width,
+			height: this.size().height,
 			top: this.pos.y,
 			left: this.pos.x
 		});
@@ -952,8 +957,8 @@ Mt.MDialog = new Class({
 	renderPreview: function(el) {
 		var el = el || this.container;
 		el.setStyles({
-			width: this.size.width,
-			height: this.size.height
+			width: this.size().width,
+			height: this.size().height
 		})
 		
 		return this;

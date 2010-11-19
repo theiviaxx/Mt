@@ -25,6 +25,9 @@
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10pt;
 }
+	.MWidget > div {
+		height: 100%;
+	}
 .MFrame {
 	border: 1px solid #769DC0;
 	margin: 2px;
@@ -138,17 +141,21 @@
 .MButton {
 	display: inline-block;
 	text-align: center;
-	font-size: 10px;
+	font-size: 11px;
 	margin: 0px;
 	padding: 4px 4px 4px;
 	border: 1px solid #769DC0;
 	background: #E4F2FF url('i/button.png') 50% 0% repeat-x;
+	vertical-align: middle;
 	-webkit-transition-duration: 0.3s;
 	-webkit-transition-property: background-color;
 	-webkit-border-radius: 4px;
 	-webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.148438);
 	cursor: pointer;
 }
+	.MButtonH > div:first-child { float: left; }
+	.MButtonH > div:last-child { float: right; }
+	.MButtonV > div:first-child, .MButtonV > div:last-child { width: 100%; text-align: center; }
 .MButtonFlat {
 	border-color: transparent;
 	background: none;
@@ -178,18 +185,8 @@
 	background-color: #8bbce8;
 }
 	.MButton img {
-		margin-top: 0px;
-	}
-	.MButton .vcenter {
-		vertical-align: middle;
-	}
-	.MButton img {
 		position: relative;
-	}
-	.MButton div:last-child div {
-		position: relative;
-		float: right;
-		margin: 0px 2px;
+		margin: 0px;
 	}
 .MLineEdit {
 	border: 1px solid #B5BCC7;
@@ -274,6 +271,7 @@
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#DAE6F4), to(#CEDDEF));
 	border-top: 1px solid #f0f5fa;
 	border-bottom: 1px solid #a9bfd3;
+	padding: 2px 0px;
 }
 	.MToolBar > div {
 		float:left;
@@ -299,3 +297,91 @@
 	height: 100%;
 	background: url('i/separator.gif') no-repeat;
 }
+
+
+/* SpinBox */
+.MSpinBox {
+	position: absolute;
+	top: 1px;
+	right: -1px;
+	width: 11px;
+	height: 100%;
+	background: #333;
+}
+	.MSpinBox div {
+		width: 11px;
+		height: 9px;
+	}
+	.MSpinBox div:first-child { background: url('i/SpinBox.png') left -0px no-repeat; }
+	.MSpinBox div:first-child:hover { background: url('i/SpinBox.png') right -0px no-repeat; }
+	.MSpinBox div:last-child { background: url('i/SpinBox.png') left -9px no-repeat; }
+	.MSpinBox div:last-child:hover { background: url('i/SpinBox.png') right -9px no-repeat; }
+
+.MMenu {
+	position: absolute;
+	border: 1px solid #979797;
+	background: #f1f1f1 url('i/MMenu.png') repeat-y;
+	padding: 2px;
+	-webkit-box-shadow: 4px 4px 3px rgba(0,0,0,.5);
+}
+.MMenuItem {
+	height: 20px;
+	max-height: 22px;
+	border: 1px solid #f1f1f1;
+	overflow: auto;
+	font-size: 10pt;
+	font-family: Verdana;
+	vertical-align: middle;
+	cursor: default;
+	padding-top: 2px;
+}
+	.MMenuItem:hover {
+		background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#F2F4F6), to(#e6edf6));
+		border: 1px solid #aecff7;
+		-webkit-border-radius: 2px;
+	}
+	.MMenuItem img {
+		float: left;
+		width: 16px;
+		height: 16px;
+		padding: 0px 4px;
+	}
+	.MMenuItem div:last-child {
+		float: left;
+		height: 18px;
+		max-height: 20px;
+		padding: 0px 4px;
+	}
+	.MMenuItemDisabled {
+		color: #6d6d6d;
+	}
+	.MMenuItemDisabled:hover {
+		background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#F2F2F2), to(#E3E4E4));
+		border: 1px solid #d4d3d3;
+	}
+.MMenuSeparator {
+	height: 8px;
+	max-height: 8px;
+	background: url('i/MMenuSeparator.png') repeat-x;
+	cursor: default;
+}
+.MSplitButton {
+	width: 14px;
+	float: right;
+	margin: 0px;
+	background: url('i/MSplitButton.gif') 100% 50% no-repeat;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

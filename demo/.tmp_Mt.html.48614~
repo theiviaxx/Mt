@@ -7,23 +7,15 @@
 		<script type="text/javascript" src="/static/javascript/mootoolsCore.js"></script>
 		<script type="text/javascript" src="/static/javascript/mootoolsMore.js"></script>
 		<script type="text/javascript" src="../Mt.js"></script>
-		<script type="text/javascript" src="../Mt.MObject.js"></script>
-		<script type="text/javascript" src="../Mt.MWidget.js"></script>
-		<script type="text/javascript" src="../Mt.MFrame.js"></script>
-		<script type="text/javascript" src="../Mt.MList.js"></script>
-		
-		<script type="text/javascript" src="../Mt.MAction.js"></script>
+		<script type="text/javascript" src="../Mt.MObserver.js"></script>
 		<script type="text/javascript" src="../Mt.MDialog.js"></script>
 		<script type="text/javascript" src="../Mt.MButton.js"></script>
 		<script type="text/javascript" src="../Mt.MSlider.js"></script>
 		<script type="text/javascript" src="../Mt.MToolBar.js"></script>
 		<script type="text/javascript" src="../Mt.MSpinBox.js"></script>
-		<script type="text/javascript" src="../Mt.MLineEdit.js"></script>
-		<script type="text/javascript" src="../Mt.MMenu.js"></script>
-		
 		
 		<script type="text/javascript">
-			var dlg, btn, btn1, l, le, s, x, p, tb, a, a2, sb, big;
+			var dlg, btn, btn1, l, le, s, x, p, tb, a, sb;
 			window.addEvent('domready', function() {
 				dlg = new Mt.MDialog(null, {
 					text: 'Dialog',
@@ -62,7 +54,7 @@
 					text: 'Open',
 					icon: '/static/images/icons/add.png',
 					onClick: function() {
-						//dlg.open();
+						dlg.open();
 					}
 				});
 				
@@ -71,10 +63,10 @@
 					size: new Mt.MSize(800, 600)
 				});
 				tb = new Mt.MToolBar(p);
-				a = tb.addAction('Save as...');
+				a = tb.addAction('aaa');
 				a.setIcon('/static/images/icons/accept.png');
-				a2 = tb.addAction('xxx');
-				//btn1.addAction(a);
+				tb.addAction('xxx');
+				btn1.addAction(a);
 				s = new Mt.MSlider(p, {
 					min: 50,
 					steps: true,
@@ -83,32 +75,11 @@
 					}
 				});
 				
-				// Buttons
-				big = new Mt.MButton(p, {
-					size: new Mt.MSize('auto', 'auto')
-				});
-				big.setIcon('/static/javascript/Mt/i/icon32.png');
-				big.setText('BIG');
-				
 				a.addEvent('triggered', function() {
 					dlg.open();
 				})
 				
 				sp = new Mt.MSpinBox(p);
-				m = new Mt.MMenu();
-				//m.popup(new Mt.MPoint(200,200));
-				m.addAction(a);
-				m.addAction('yyy');
-				//btn1.setMenu(m);
-				btn2 = new Mt.MSplitButton(null, {
-					text: 'SplitButton',
-					icon: '/static/images/icons/add.png',
-					onChange: function() {
-						console.log('clicked')
-					}
-				});
-				btn2.setMenu(m);
-				//a.setEnabled(false)
 			})
 		</script>
 	</head>

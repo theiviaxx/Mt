@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Mt.MButton</title>
+		
+		<link type="text/css" rel="stylesheet" href="../Mt.css" />
+		
+		<script type="text/javascript" src="/static/javascript/mootoolsCore.js"></script>
+		<script type="text/javascript" src="/static/javascript/mootoolsMore.js"></script>
+		<script type="text/javascript" src="../Mt.js"></script>
+		<script type="text/javascript" src="../Mt.MObject.js"></script>
+		<script type="text/javascript" src="../Mt.MWidget.js"></script>
+		<script type="text/javascript" src="../Mt.MFrame.js"></script>
+		<script type="text/javascript" src="../Mt.MList.js"></script>
+		
+		<script type="text/javascript" src="../Mt.MAction.js"></script>
+		<script type="text/javascript" src="../Mt.MDialog.js"></script>
+		<script type="text/javascript" src="../Mt.MButton.js"></script>
+		<script type="text/javascript" src="../Mt.MSlider.js"></script>
+		<script type="text/javascript" src="../Mt.MToolBar.js"></script>
+		<script type="text/javascript" src="../Mt.MSpinBox.js"></script>
+		<script type="text/javascript" src="../Mt.MLineEdit.js"></script>
+		<script type="text/javascript" src="../Mt.MMenu.js"></script>
+		
+		<style type='text/css'>
+			.MWidget { margin: 4px; }
+			h1 { background: #ccc; width: 100%; font-size: 14pt; }
+			h2 { font-size: 12pt; }
+		</style>
+		
+		<script type="text/javascript">
+			window.addEvent('domready', function() {
+				var b1 = new Mt.MButton($('to'));
+				b1.setText('Add user');
+				var b2 = new Mt.MButton($('to'));
+				b2.setSize(new Mt.MSize('auto', 24));
+				b2.setText('Add user');
+				var b3 = new Mt.MButton($('to'));
+				b3.setSize(new Mt.MSize('auto', 32));
+				b3.setText('Add user');
+				
+				var b1 = new Mt.MButton($('io'));
+				b1.setIcon('/static/javascript/Mt/i/icon16.png');
+				var b2 = new Mt.MButton($('io'));
+				b2.setSize(new Mt.MSize('auto', 24));
+				b2.setIcon('/static/javascript/Mt/i/icon24.png');
+				var b3 = new Mt.MButton($('io'));
+				b3.setSize(new Mt.MSize('auto', 32));
+				b3.setIcon('/static/javascript/Mt/i/icon32.png');
+				
+				var b1 = new Mt.MButton($('itr'));
+				b1.setIcon('/static/javascript/Mt/i/icon16.png');
+				b1.setText('Add user');
+				var b2 = new Mt.MButton($('itr'));
+				b2.setSize(new Mt.MSize('auto', 24));
+				b2.setIcon('/static/javascript/Mt/i/icon24.png');
+				b2.setText('Add user');
+				var b3 = new Mt.MButton($('itr'));
+				b3.setSize(new Mt.MSize('auto', 32));
+				b3.setIcon('/static/javascript/Mt/i/icon32.png');
+				b3.setText('Add user');
+				
+				var b1 = new Mt.MButton($('itt'));
+				b1.setIcon('/static/javascript/Mt/i/icon16.png');
+				b1.setText('Add user');
+				b1.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+				var b2 = new Mt.MButton($('itt'));
+				b2.setSize(new Mt.MSize('auto', 24));
+				b2.setIcon('/static/javascript/Mt/i/icon24.png');
+				b2.setText('Add user');
+				b2.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+				var b3 = new Mt.MButton($('itt'));
+				b3.setSize(new Mt.MSize('auto', 32));
+				b3.setIcon('/static/javascript/Mt/i/icon32.png');
+				b3.setText('Add user');
+				b3.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+				
+				var b1 = new Mt.MButton($('itl'));
+				b1.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+				b1.setIcon('/static/javascript/Mt/i/icon16.png');
+				b1.setText('Add user');
+				var b2 = new Mt.MButton($('itl'));
+				b2.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+				b2.setSize(new Mt.MSize('auto', 24));
+				b2.setIcon('/static/javascript/Mt/i/icon24.png');
+				b2.setText('Add user');
+				var b3 = new Mt.MButton($('itl'));
+				b3.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+				b3.setSize(new Mt.MSize('auto', 32));
+				b3.setIcon('/static/javascript/Mt/i/icon32.png');
+				b3.setText('Add user');
+				
+				var b1 = new Mt.MButton($('itb'));
+				b1.setIcon('/static/javascript/Mt/i/icon16.png');
+				b1.setText('Add user');
+				b1.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+				var b2 = new Mt.MButton($('itb'));
+				b2.setSize(new Mt.MSize('auto', 24));
+				b2.setIcon('/static/javascript/Mt/i/icon24.png');
+				b2.setText('Add user');
+				b2.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+				var b3 = new Mt.MButton($('itb'));
+				b3.setSize(new Mt.MSize('auto', 32));
+				b3.setIcon('/static/javascript/Mt/i/icon32.png');
+				b3.setText('Add user');
+				b3.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+			})
+		</script>
+	</head>
+	<body>
+		<h1>Normal Buttons</h1>
+		<div id="to">
+			<h2>Text Only</h2>
+		</div>
+		<div id="io">
+			<h2>Icon Only</h2>
+		</div>
+		<div id="itr">
+			<h2>Text & Icon (Right)</h2>
+		</div>
+		<div id="itt">
+			<h2>Text & Icon (Top)</h2>
+		</div>
+		<div id="itl">
+			<h2>Text & Icon (Left)</h2>
+		</div>
+		<div id="itb">
+			<h2>Text & Icon (Left)</h2>
+		</div>
+	</body>
+</html>
