@@ -1,7 +1,6 @@
 Mt.MAbstractButton = new Class({
 	Extends: Mt.MWidget,
 	options: {
-		icon: '/static/javascript/Mt/i/blank.png',
 		text: ''
 	},
 	initialize: function(parent, options){
@@ -28,15 +27,23 @@ Mt.MAbstractButton = new Class({
 		});
 		this.action = action;
 		this.action.setText();
+		
+		return action;
 	},
 	setCheckable: function(bool) {
 		this.checkable = bool;
+		
+		return this;
 	},
 	setChecked: function(bool) {
 		this.checked = bool;
+		
+		return this;
 	},
 	setDown: function(bool) {
 		this.down = bool;
+		
+		return this;
 	},
 	setIcon: function(icon) {
 		switch (typeOf(icon)) {
@@ -48,40 +55,55 @@ Mt.MAbstractButton = new Class({
 				break;
 			case 'boolean':
 			case 'null':
-				this.iconSrc = '/static/javascript/Mt/i/blank.png';
+				this.iconSrc = Mt.MBlankIcon;
 				break;
 		}
 		this.icon.src = this.iconSrc;
+		
+		return this;
 	},
 	setIconSize: function(size) {
 		this.iconSize = size;
 		this.icon.setStyles({
-			width: size.width,
-			height: size.height
+			width: size.width(),
+			height: size.height()
 		});
+		
+		return this;
 	},
 	setOrientation: function(o) {
 		this.orientation = o;
+		
+		return this;
 	},
 	setShortcut: function(string) {
 		this.shortbut = string;
+		
+		return this;
 	},
 	setText: function(string) {
-		this.text = string;
-		this.label.set('text', this.text);
+		this.__text = string;
+		this.label.set('text', this.__text);
+		
+		return this;
+	},
+	text: function() {
+		return this.__text;
 	},
 	toggle: function() {
 		this.checked = (this.checked) ? false : true;
+		
+		return this;
 	}
 });
 Mt.MAbstractButton.Orientation = new Enum('TextOnRight TextOnLeft TextOnTop TextOnBottom');
 
 
-Mt.MButton = new Class({
+Mt.MPushButton = new Class({
 	Extends: Mt.MAbstractButton,
 	options: {
 		align: 'center',
-		size: new Mt.MSize('auto', 14),
+		size: new Mt.MSize('auto', 24),
 		onClick: function(){}
 	},
 	initialize: function(parent, options) {
@@ -135,6 +157,7 @@ Mt.MButton = new Class({
 			this.setChecked(checkState);
 		}
 		this.fireEvent('change', [e]);
+		this.fireEvent('click', [e]);
 	},
 	focusInEvent: function(e) {
 		e.stop();
@@ -162,8 +185,8 @@ Mt.MButton = new Class({
 			this.element.removeClass(newClass);
 		}
 		if (this.menu) {
-			var children = this.container.getElements('*');
-			if (children.contains(e.target)) {
+			if (e.target == this.menuElement && !e.rightClick) {
+				e.stop();
 				this.showMenu();
 			}
 		}
@@ -177,8 +200,8 @@ Mt.MButton = new Class({
 		else {
 			newScale = this.size().scale(width, ratio)
 		}
-		this.geometry.width =  newScale.width;
-		this.geometry.height =  newScale.height;
+		this.geometry.width =  newScale.width();
+		this.geometry.height =  newScale.height();
 		
 		this.shim.setStyles({
 			height: newScale.height / 2 - 8
@@ -198,10 +221,14 @@ Mt.MButton = new Class({
 		else {
 			this.element.removeClass(newClass);
 		}
+		
+		return this;
 	},
 	setFlat: function(bool) {
 		this.flat = bool;
 		this.element.addClass('MButtonFlat');
+		
+		return this;
 	},
 	setIcon: function(icon) {
 		switch (typeOf(icon)) {
@@ -213,7 +240,7 @@ Mt.MButton = new Class({
 				break;
 			case 'boolean':
 			case 'null':
-				this.iconSrc = '/static/javascript/Mt/i/blank.png';
+				this.iconSrc = Mt.MBlankIcon;
 				break;
 		}
 		this.icon.src = this.iconSrc;
@@ -221,28 +248,49 @@ Mt.MButton = new Class({
 			this.iconShim.setStyle('height', 0);
 		}
 		else {
-			this.icon.onload = function(img) {
-				var iconShimHeight = (this.size().height / 2) - (this.icon.height / 2);
+			var padding = Mt.StyleParser.toList(this.element.getStyle('padding'));
+			if (this.icon.complete) {
+				var iconShimHeight = (this.geometry().size().height() / 2) - (this.icon.height / 2) - padding[0];
 				this.iconShim.setStyle('height', Math.max(0, iconShimHeight));
-				this.setText(this.text);
-			}.bind(this);
+			}
+			else {
+				this.icon.onload = function(img) {
+					var iconShimHeight = (this.geometry().height() / 2) - (this.icon.height / 2) - padding[0];
+					this.iconShim.setStyle('height', Math.max(0, iconShimHeight));
+					this.setText(this.text());
+				}.bind(this);
+			}
 		}
 		
+		return this;
 	},
 	setMenu: function(menu) {
+		//this.menu = menu;
+		//new Element('img', {src: '../i/DownArrow.png','style':'padding: 0px 4px;'}).inject(this.label)
 		this.menu = menu;
-		new Element('img', {src: '/static/javascript/Mt/i/DownArrow.png','style':'padding: 0px 4px;'}).inject(this.label)
+		this.menuElement = new Element('div', {
+			'class': 'MSplitButton',
+			styles: {
+				'height': this.size().height()
+			}
+		}).inject(this.label, 'before');
+		this.label.setStyle('width', this.label.getWidth() + 16); // $FIXME$ width of menu arrow + padding
+		
+		return this;
 	},
 	setText: function(string) {
 		if (this.orientation > Mt.MAbstractButton.Orientation.TextOnLeft) {
 			this.textShim.setStyle('height', 0);
 		}
 		else {
-			var textShimHeight = (this.size().height / 2) - (14 / 2); //FIXME text line height
+			var padding = Mt.StyleParser.toList(this.element.getStyle('padding'));
+			var textShimHeight = (this.size().height() / 2) - (14 / 2) - padding[0]; //FIXME text line height
 			this.textShim.setStyle('height', Math.max(0, textShimHeight));
 		}
-		this.text = string;
-		this.label.set('text', this.text);
+		this.__text = string;
+		this.label.set('text', this.text());
+		
+		return this;
 	},
 	setOrientation: function(o) {
 		this.orientation = o;
@@ -269,17 +317,43 @@ Mt.MButton = new Class({
 				this.label.parentNode.inject(this.element, 'bottom');
 				break;
 		}
-		this.setText(this.text);
+		this.setText(this.__text);
 		this.setIcon(this.icon);
+		
+		return this;
+	},
+	setGeometry: function() {
+		if (arguments.length > 1) {
+			this.__geometry = new Mt.MRect(arguments[0],arguments[1],arguments[2],arguments[3]);
+		}
+		else {
+			this.__geometry = arguments[0];
+		}
+		
+		this.container.setStyles({
+			width: this.__geometry.width(),
+			height: this.__geometry.height()
+		});
+		
+		if (this.element) {
+			this.element.setStyles({
+				width: this.__geometry.width() - 10,
+				height: this.__geometry.height() - 10
+			});
+			this.setText(this.__text);
+			this.setIcon(this.icon);
+		}
+		
+		return this;
 	},
 	showMenu: function() {
-		this.menu.popup(new Mt.MPoint(this.container.getPosition().x, this.container.getPosition().y + this.element.getHeight()));
+		this.menu.popup(new Mt.MPoint(this.geometry().x(), this.geometry().y() + this.geometry().height()));
 	}
 });
 
 
 Mt.MSplitButton = new Class({
-	Extends: Mt.MButton,
+	Extends: Mt.MPushButton,
 	options: {
 		
 	},
@@ -299,7 +373,7 @@ Mt.MSplitButton = new Class({
 		var newClass = (this.flat) ? 'MButtonFlatDown' : 'MButtonDown';
 		this.element.removeClass(newClass);
 		if (this.menu) {
-			if (e.target == this.menuElement) {
+			if (e.target == this.menuElement && !e.rightClick) {
 				this.showMenu();
 			}
 		}
@@ -309,8 +383,9 @@ Mt.MSplitButton = new Class({
 		this.menuElement = new Element('div', {
 			'class': 'MSplitButton',
 			styles: {
-				'height': this.size().height
+				'height': this.size().height() - 10 // $FIXME$ padding + border
 			}
 		}).inject(this.label, 'before');
+		this.label.setStyle('width', this.label.getWidth() + 16); // $FIXME$ width of menu arrow + padding
 	}
 });

@@ -5,8 +5,8 @@
 		
 		<link type="text/css" rel="stylesheet" href="../Mt.css" />
 		
-		<script type="text/javascript" src="/static/javascript/mootoolsCore.js"></script>
-		<script type="text/javascript" src="/static/javascript/mootoolsMore.js"></script>
+		<script type="text/javascript" src="../j/mootoolsCore.js"></script>
+		<script type="text/javascript" src="../j/mootoolsMore.js"></script>
 		<script type="text/javascript" src="../Mt.js"></script>
 		<script type="text/javascript" src="../Mt.MObject.js"></script>
 		<script type="text/javascript" src="../Mt.MWidget.js"></script>
@@ -21,6 +21,8 @@
 		<script type="text/javascript" src="../Mt.MSpinBox.js"></script>
 		<script type="text/javascript" src="../Mt.MLineEdit.js"></script>
 		<script type="text/javascript" src="../Mt.MMenu.js"></script>
+		<script type="text/javascript" src="../Mt.MBuiltins.js"></script>
+		<script type="text/javascript" src="../Mt.MLayout.js"></script>
 		
 		<style type='text/css'>
 			.MWidget { margin: 4px; }
@@ -29,103 +31,139 @@
 		</style>
 		
 		<script type="text/javascript">
+			var b1,b2,b3;
 			window.addEvent('domready', function() {
-				var b1 = new Mt.MButton($('to'));
-				b1.setText('Add user');
-				var b2 = new Mt.MButton($('to'));
-				b2.setSize(new Mt.MSize('auto', 24));
-				b2.setText('Add user');
-				var b3 = new Mt.MButton($('to'));
-				b3.setSize(new Mt.MSize('auto', 32));
-				b3.setText('Add user');
+				var sizes = [0, 32, 48];
+				var icons = ['../i/icon16.png', '../i/icon24.png', '../i/icon32.png'];
+				var label = 'Add User';
+				var sections = ['Text Only', 'Icon Only', 'Text & Icon (Right)', 'Text & Icon (Top)', 'Text & Icon (Left)', 'Text & Icon (Bottom)'];
 				
-				var b1 = new Mt.MButton($('io'));
-				b1.setIcon('/static/javascript/Mt/i/icon16.png');
-				var b2 = new Mt.MButton($('io'));
-				b2.setSize(new Mt.MSize('auto', 24));
-				b2.setIcon('/static/javascript/Mt/i/icon24.png');
-				var b3 = new Mt.MButton($('io'));
-				b3.setSize(new Mt.MSize('auto', 32));
-				b3.setIcon('/static/javascript/Mt/i/icon32.png');
-				
-				var b1 = new Mt.MButton($('itr'));
-				b1.setIcon('/static/javascript/Mt/i/icon16.png');
-				b1.setText('Add user');
-				var b2 = new Mt.MButton($('itr'));
-				b2.setSize(new Mt.MSize('auto', 24));
-				b2.setIcon('/static/javascript/Mt/i/icon24.png');
-				b2.setText('Add user');
-				var b3 = new Mt.MButton($('itr'));
-				b3.setSize(new Mt.MSize('auto', 32));
-				b3.setIcon('/static/javascript/Mt/i/icon32.png');
-				b3.setText('Add user');
-				
-				var b1 = new Mt.MButton($('itt'));
-				b1.setIcon('/static/javascript/Mt/i/icon16.png');
-				b1.setText('Add user');
-				b1.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
-				var b2 = new Mt.MButton($('itt'));
-				b2.setSize(new Mt.MSize('auto', 24));
-				b2.setIcon('/static/javascript/Mt/i/icon24.png');
-				b2.setText('Add user');
-				b2.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
-				var b3 = new Mt.MButton($('itt'));
-				b3.setSize(new Mt.MSize('auto', 32));
-				b3.setIcon('/static/javascript/Mt/i/icon32.png');
-				b3.setText('Add user');
-				b3.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
-				
-				var b1 = new Mt.MButton($('itl'));
-				b1.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
-				b1.setIcon('/static/javascript/Mt/i/icon16.png');
-				b1.setText('Add user');
-				var b2 = new Mt.MButton($('itl'));
-				b2.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
-				b2.setSize(new Mt.MSize('auto', 24));
-				b2.setIcon('/static/javascript/Mt/i/icon24.png');
-				b2.setText('Add user');
-				var b3 = new Mt.MButton($('itl'));
-				b3.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
-				b3.setSize(new Mt.MSize('auto', 32));
-				b3.setIcon('/static/javascript/Mt/i/icon32.png');
-				b3.setText('Add user');
-				
-				var b1 = new Mt.MButton($('itb'));
-				b1.setIcon('/static/javascript/Mt/i/icon16.png');
-				b1.setText('Add user');
-				b1.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
-				var b2 = new Mt.MButton($('itb'));
-				b2.setSize(new Mt.MSize('auto', 24));
-				b2.setIcon('/static/javascript/Mt/i/icon24.png');
-				b2.setText('Add user');
-				b2.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
-				var b3 = new Mt.MButton($('itb'));
-				b3.setSize(new Mt.MSize('auto', 32));
-				b3.setIcon('/static/javascript/Mt/i/icon32.png');
-				b3.setText('Add user');
-				b3.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+				sections.each(function(s) {
+					var h = new Element('h2', {'text': s}).inject('normal');
+					var div = new Element('div').inject('normal');
+					for (var b=0;b<3;b++) {
+						var btn = new Mt.MPushButton(div);
+						if (sizes[b]) {
+							btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Icon') > -1) {
+							btn.setIcon(icons[b])
+						}
+						if (s.search('Text') > -1) {
+							btn.setText(label);
+						}
+						if (s.search('Left') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+						}
+						if (s.search('Top') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Bottom') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+					}
+				});
+				sections.each(function(s) {
+					var h = new Element('h2', {'text': s}).inject('toggle');
+					var div = new Element('div').inject('toggle');
+					for (var b=0;b<3;b++) {
+						var btn = new Mt.MPushButton(div);
+						btn.setCheckable(true);
+						if (sizes[b]) {
+							btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Icon') > -1) {
+							btn.setIcon(icons[b])
+						}
+						if (s.search('Text') > -1) {
+							btn.setText(label);
+						}
+						if (s.search('Left') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+						}
+						if (s.search('Top') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Bottom') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+					}
+				});
+				sections.each(function(s) {
+					var h = new Element('h2', {'text': s}).inject('menu');
+					var div = new Element('div').inject('menu');
+					for (var b=0;b<3;b++) {
+						var btn = new Mt.MPushButton(div);
+						var m = new Mt.MMenu();
+						m.addAction('Menu Item 1');
+						m.addAction('Menu Item 2');
+						m.addAction('Menu Item 3');
+						btn.setMenu(m);
+						if (sizes[b]) {
+							btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Icon') > -1) {
+							btn.setIcon(icons[b])
+						}
+						if (s.search('Text') > -1) {
+							btn.setText(label);
+						}
+						if (s.search('Left') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+						}
+						if (s.search('Top') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Bottom') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+					}
+				});
+				sections.each(function(s) {
+					var h = new Element('h2', {'text': s}).inject('split');
+					var div = new Element('div').inject('split');
+					for (var b=0;b<3;b++) {
+						var btn = new Mt.MSplitButton(div);
+						var m = new Mt.MMenu();
+						m.addAction('Menu Item 1');
+						m.addAction('Menu Item 2');
+						m.addAction('Menu Item 3');
+						btn.setMenu(m);
+						if (sizes[b]) {
+							btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Icon') > -1) {
+							btn.setIcon(icons[b])
+						}
+						if (s.search('Text') > -1) {
+							btn.setText(label);
+						}
+						if (s.search('Left') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnLeft);
+						}
+						if (s.search('Top') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnTop);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+						if (s.search('Bottom') > -1) {
+							btn.setOrientation(Mt.MAbstractButton.Orientation.TextOnBottom);
+							//btn.setGeometry(0,0,'auto', sizes[b]);
+						}
+					}
+				});
 			})
 		</script>
 	</head>
 	<body>
-		<h1>Normal Buttons</h1>
-		<div id="to">
-			<h2>Text Only</h2>
-		</div>
-		<div id="io">
-			<h2>Icon Only</h2>
-		</div>
-		<div id="itr">
-			<h2>Text & Icon (Right)</h2>
-		</div>
-		<div id="itt">
-			<h2>Text & Icon (Top)</h2>
-		</div>
-		<div id="itl">
-			<h2>Text & Icon (Left)</h2>
-		</div>
-		<div id="itb">
-			<h2>Text & Icon (Left)</h2>
-		</div>
+		<div id="normal"><h1>Normal Buttons</h1></div>
+		<div id="toggle"><h1>Toggle Buttons</h1></div>
+		<div id="menu"><h1>Menu Buttons</h1></div>
+		<div id="split"><h1>Split Buttons</h1></div>
 	</body>
 </html>

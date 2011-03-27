@@ -3,25 +3,18 @@
  * Button 100
  ***************************************/
 .MRowEven { background-color: #E4F2FF;}
-.MWidgetDisabled {
-	background-position:0px -149px;
-    background-color: #e3e3e3;
-    border: solid 1px #c9c9c9;
-    color: #696969;
-    box-shadow:0px 0px 0px rgba(0,0,0,0);
-    -webkit-box-shadow:0px 0px 0px rgba(0,0,0,0);
-    -moz-box-shadow: 0px 0px 0px rgba(0,0,0,0);
-}
+
 .MWidgetDisabledFrame {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	width: 100%;
 	height: 100%;
+	z-index: 2000;
 }
 .MWidget {
 	position: relative;
-	display:inline-block;
+	display: inline-block;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 10pt;
 }
@@ -43,17 +36,22 @@
 	position: relative;
 	text-align: left;
 	padding: 0px;
-	border-width: 25px 3px 20px 3px;
-	-webkit-border-image: url('i/window2.png') 25 3 20 3 stretch stretch;
+	border-width: 25px 2px 2px 2px;
+	-webkit-border-image: url('i/MPanel.png') 25 2 2 2 stretch stretch;
 }
 .MDialog {
 	position: absolute;
 	z-index: 2200;
+	border-width: 25px 6px 28px 6px;
+	-webkit-border-image: url('i/MDialog.png') 25 6 28 6 stretch stretch;
 	-webkit-box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
 }
 .MPanelStatusBar {
-	-webkit-border-image: url('i/window2_statusBar.png') 25 3 20 3 stretch stretch;
+	
 }
+	.MPanel > div {
+		overflow: auto;
+	}
 	.MPanel span.label {
 		position: absolute;
 		top: -25px;
@@ -74,16 +72,16 @@
 			width: 16px;
 			height: 16px;
 		}
-	.MDialog span.label {
+	.MPanel .MPanelMove {
 		cursor: move;
 	}
-	.MDialog div.actions {
+	.MPanel div.actions {
 		position: absolute;
 		top: -20px;
 		right: 0px;
-		
+		height: 18px;
 	}
-	.MDialog div.action {
+	.MPanel div.action {
 		float: right;
 		width: 14px;
 		height: 14px;
@@ -91,18 +89,18 @@
 		cursor: pointer;
 		background: url('i/dialogActions.png') top left no-repeat;
 	}
-		.MDialog div.close { background-position: top 0px; }
-		.MDialog div.close:hover { background-position: bottom 0px; }
-		.MDialog div.minimize { background-position: top -14px; }
-		.MDialog div.minimize:hover { background-position: bottom -14px; }
-		.MDialog div.maximize { background-position: top -42px; }
-		.MDialog div.maximize:hover { background-position: bottom -42px; }
-		.MDialog div.restore { background-position: top -28px; }
-		.MDialog div.restore:hover { background-position: bottom -28px; }
+		.MPanel div.close { background-position: top 0px; }
+		.MPanel div.close:hover { background-position: bottom 0px; }
+		.MPanel div.minimize { background-position: top -14px; }
+		.MPanel div.minimize:hover { background-position: bottom -14px; }
+		.MPanel div.maximize { background-position: top -42px; }
+		.MPanel div.maximize:hover { background-position: bottom -42px; }
+		.MPanel div.restore { background-position: top -28px; }
+		.MPanel div.restore:hover { background-position: bottom -28px; }
 	.MPanel .MStatusBar {
 		margin-top: 2px;
 		width: 100%;
-		height: 16px;
+		height: 24px;
 	}
 .MDialogMaximizeFrame {
 	position: absolute;
@@ -111,6 +109,27 @@
 	width: 100%;
 	height: 100%;
 }
+.MMessageBox {
+	padding-top: 20px;
+}
+	.MMessageBox > div p {
+		width: 90%;
+		margin: 0px auto;
+	}
+	.MMessageBox > div p:last-child {
+		margin-top: 8px;
+		font-size: 75%;
+	}
+	.MMessageBox > div img {
+		width: 64px;
+		height: 64px;
+		margin: 0px 12px;
+		float: left;
+	}
+	.MMessageBoxIconInformation { background: url('i/MMessageBoxIcons.png') no-repeat -64px 0px }
+	.MMessageBoxIconWarning { background: url('i/MMessageBoxIcons.png') no-repeat -128px 0px }
+	.MMessageBoxIconCritical { background: url('i/MMessageBoxIcons.png') no-repeat -192px 0px }
+	.MMessageBoxIconQuestion { background: url('i/MMessageBoxIcons.png') no-repeat 0px 0px }
 .MSizePreview {
 	position: absolute;
 	top: -25px;
@@ -128,25 +147,16 @@
 	background: url('i/sizeGrip.png') no-repeat;
 	cursor: nw-resize;	
 }
-	.MDialog .MDialogResizeContainer { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; }
-	.MDialog .MDialogResizeContainer div { position:absolute; }
-		.MResizeHandleN { top: -28px; left: 0px; width: 100%; height:6px; cursor: n-resize;}
-		.MResizeHandleE { top: 0px; right: -6px; width: 6px; height:100%; cursor: e-resize; }
-		.MResizeHandleS { bottom: -22px; left: 0px; width: 100%; height:6px; cursor: s-resize; }
-		.MResizeHandleW { top: 0px; left: -6px; width: 6px; height:100%; cursor: w-resize; }
-		.MResizeHandleNE { top: -28px; right: -6px; width: 6px; height:6px; cursor: ne-resize; }
-		.MResizeHandleNW { top: -28px; left: -6px; width: 6px; height:6px; cursor: nw-resize; }
-		.MResizeHandleSE { bottom: -22px; right: -6px; width: 6px; height:6px; cursor: se-resize; }
-		.MResizeHandleSW { bottom: -22px; left: -6px; width: 6px; height:6px; cursor: sw-resize; }
 .MButton {
 	display: inline-block;
 	text-align: center;
 	font-size: 11px;
 	margin: 0px;
-	padding: 4px 4px 4px;
+	padding: 4px;
 	border: 1px solid #769DC0;
 	background: #E4F2FF url('i/button.png') 50% 0% repeat-x;
 	vertical-align: middle;
+	overflow: hidden;
 	-webkit-transition-duration: 0.3s;
 	-webkit-transition-property: background-color;
 	-webkit-border-radius: 4px;
@@ -325,15 +335,15 @@
 	-webkit-box-shadow: 4px 4px 3px rgba(0,0,0,.5);
 }
 .MMenuItem {
+	position: relative;
 	height: 20px;
 	max-height: 22px;
 	border: 1px solid #f1f1f1;
-	overflow: auto;
 	font-size: 10pt;
 	font-family: Verdana;
 	vertical-align: middle;
 	cursor: default;
-	padding-top: 2px;
+	padding: 2px 16px 0px 0px;
 }
 	.MMenuItem:hover {
 		background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#F2F4F6), to(#e6edf6));
@@ -359,6 +369,14 @@
 		background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#F2F2F2), to(#E3E4E4));
 		border: 1px solid #d4d3d3;
 	}
+	.MSubMenuIcon {
+		position: absolute;
+		top: 8px;
+		right: 0px;
+		width: 4px;
+		height: 7px;
+		background: url('i/MSubMenuIcon.png') no-repeat;
+	}
 .MMenuSeparator {
 	height: 8px;
 	max-height: 8px;
@@ -366,15 +384,41 @@
 	cursor: default;
 }
 .MSplitButton {
+	display: table;
 	width: 14px;
 	float: right;
 	margin: 0px;
 	background: url('i/MSplitButton.gif') 100% 50% no-repeat;
 }
+.MWidgetDisabled {
+	background-position:0px -149px;
+    background-color: #e3e3e3;
+    border: solid 1px #c9c9c9;
+    color: #696969;
+    box-shadow:0px 0px 0px rgba(0,0,0,0);
+    -webkit-box-shadow:0px 0px 0px rgba(0,0,0,0);
+    -moz-box-shadow: 0px 0px 0px rgba(0,0,0,0);
+}
 
-
-
-
+.MTabBar {
+	position: relative;
+	height: 32px;
+	background: #999;
+}
+.MTab {
+	position: relative;
+	float: left;
+	height: 100%;
+	background: #ccc;
+}
+.MTabCurrent {
+	background: #fff;
+}
+.MGroupBox {
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
 
 
 

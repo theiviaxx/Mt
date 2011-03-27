@@ -17,7 +17,10 @@ Mt.MMenu = new Class({
 		this.items = [];
 		
 		// Final injection into DOM
-		this.element.inject(this.parentObj);
+		this.container.inject(this.parentObj);
+		this.container.addClass('MMenu');
+		this.container.setStyles({width: null, height: null});
+		this.container.hide();
 	},
 	binds: function() {
 		this.events = {
@@ -29,10 +32,8 @@ Mt.MMenu = new Class({
 	},
 	__build: function() {
 		var element = new Element('div', {
-			'class': 'MMenu',
 			events: this.events
 		});
-		element.hide();
 		
 		return element;
 	},
@@ -85,6 +86,7 @@ Mt.MMenu = new Class({
 		}
 		var mi = new Mt.MMenuItem(action);
 		this.insertAction(null, mi, action);
+		
 		return action;
 	},
 	addMenu: function() {
@@ -98,11 +100,14 @@ Mt.MMenu = new Class({
 			var menu = arguments[0];
 		}
 		action.setText(menu.title);
-		action.addEvent('hovered', function(e) {
-			menu.popup();
-		})
 		
 		var mi = new Mt.MMenuItem(action);
+		mi.setSubMenu();
+		action.addEvent('hovered', function(e) {
+			mi.setGeometry();
+			var p = new Mt.MPoint(mi.geometry().x() + this.element.getWidth(), mi.geometry().y());
+			menu.popup(p);
+		}.bind(this));
 		this.insertMenu(null, mi, action);
 	},
 	addSeparator: function() {
@@ -121,13 +126,13 @@ Mt.MMenu = new Class({
 		if (e.page.y > p.y && e.page.y < h + p.y) { fy = true; }
 		if (!fx || !fx) {
 			window.removeEvent('mousedown', this.events.hideEvent);
-			this.element.hide();
+			this.container.hide();
 		}
 	},
 	insertAction: function(action, item, actionToAdd) {
 		if (action == null) {
 			this.items.push(item);
-			this.children.push(actionToAdd);
+			this.children().push(actionToAdd);
 			$(item).inject(this.element);
 		}
 		else {
@@ -136,6 +141,7 @@ Mt.MMenu = new Class({
 			this.items.splice(index, 0, item);
 			this.items.splice(index, 0, actionToAdd);
 		}
+		item.menu = this;
 		
 		return item;
 	},
@@ -143,7 +149,7 @@ Mt.MMenu = new Class({
 		this.insertAction(action, item, menu)
 	},
 	insertSeparator: function(action) {
-		var index = this.children.indexOf(action);
+		var index = this.children().indexOf(action);
 		var div = new Element('div', {'class': 'MMenuSeparator'});
 		div.inject($(this.items[index]), 'before');
 		this.items.splice(index, 0, div);
@@ -161,11 +167,11 @@ Mt.MMenu = new Class({
 		
 	},
 	popup: function(point) {
-		this.element.setStyles({
-			top: point.y,
-			left: point.x
+		this.container.setStyles({
+			top: point.y(),
+			left: point.x()
 		});
-		this.element.show();
+		this.container.show();
 		window.addEvent('mousedown', this.events.hideEvent);
 	},
 	setIcon: function() {
@@ -180,6 +186,7 @@ Mt.MMenuItem = new Class({
 	Extends: Mt.MWidget,
 	initialize: function(action) {
 		this.action = action;
+		this.menu = null;
 		this.enabled = true;
 		this.checkable = false;
 		this.checked = false;
@@ -187,11 +194,12 @@ Mt.MMenuItem = new Class({
 		this.element = new Element('div', {
 			'class': 'MMenuItem'
 		});
-		this.icon = new Element('img', {src: action.iconSrc}).inject(this.element);
-		this.text = new Element('div', {text: action.text}).inject(this.element);
+		this.__icon = new Element('img', {src: action.iconSrc}).inject(this.element);
+		this.__text = new Element('div', {text: action.text}).inject(this.element);
 		
 		this.element.addEvent('click', function(e) {
 			if (this.enabled) {
+				this.menu.container.hide();
 				action.activate(Mt.MAction.ActionEvent.Trigger, e);
 			}
 		}.bind(this));
@@ -201,6 +209,9 @@ Mt.MMenuItem = new Class({
 			}
 		}.bind(this))
 		action.associatedWidgets.push(this);
+	},
+	geometry: function() {
+		return this.__geometry;
 	},
 	setEnabled: function(bool) {
 		bool = (bool == undefined) ? true : bool;
@@ -230,7 +241,21 @@ Mt.MMenuItem = new Class({
 			}
 		}
 	},
+	setGeometry: function() {
+		var coords = this.element.getCoordinates();
+		this.__geometry = new Mt.MRect(coords.left, coords.top, coords.width, coords.height);
+	},
 	setIcon: function(icon) {
-		this.icon.src = icon;
+		this.__icon.src = icon;
+	},
+	setSubMenu: function(bool) {
+		var bool = (bool == undefined) ? true : bool;
+		this.element.getElements('.MSubMenuIcon').destroy();
+		if (bool) {
+			new Element('div', {'class':'MSubMenuIcon'}).inject(this.element, 'top');
+		}
+	},
+	setText: function(text) {
+		this.__text.set('text', text);
 	}
 })

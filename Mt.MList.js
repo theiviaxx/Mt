@@ -124,11 +124,8 @@ Mt.MListWidget = new Class({
 		this.items = [];
 		this.selection = [];
 		
-		this.container.addClass(this.type);
-		
 		this.container.addEvent('mousedown', function(e) {
 			e.stop();
-			
 		})
 	},
 	__type: function() {

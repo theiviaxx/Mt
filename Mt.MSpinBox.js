@@ -103,9 +103,12 @@ Mt.MSpinBox = new Class({
 		this.value = 0;
 		
 		this.lineEdit.element.setStyles({
-			width: this.size().width,
-			height: this.size().height
+			width: this.size().width(),
+			height: this.size().height()
 		});
+		
+		this.element.className = '';
+		
 		this.spinnerContainer = new Element('div', {'class': 'MSpinBox'}).inject(this.container);
 		this.spinUp = new Element('div', {
 			events: {

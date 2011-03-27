@@ -16,8 +16,7 @@ Mt.MToolBar = new Class({
 		
 		this.container.addClass(this.type);
 		
-		this.container.setStyle('width', this.parentObj.size().width - 2);
-		this.container.setStyle('left', -2);
+		this.container.setStyle('width', '100%');
 	},
 	binds: function() {
 		this.events = {
@@ -37,7 +36,7 @@ Mt.MToolBar = new Class({
 	},
 	addAction: function() {
 		var action = new Mt.MAction();
-		var widget = new Mt.MButton(this);
+		var widget = new Mt.MPushButton(this);
 		widget.addEvent('trigger', function(e) {
 			this.__actionTriggered(e);
 		}.bind(this));
@@ -111,11 +110,11 @@ Mt.MToolBar = new Class({
 	},
 	insertWidget: function(action, widget) {
 		if (action == null) {
-			this.children.push(widget);
+			this.children().push(widget);
 			widget.container.inject(this.element);
 		}
 		else {
-			var index = this.children.indexOf(action);
+			var index = this.children().indexOf(action);
 			widget.container.inject(this.children[index], 'before');
 			this.children.splice(index, 0, widget);
 		}

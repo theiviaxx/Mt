@@ -1,23 +1,26 @@
 Mt.MGroupBox = new Class({
 	Extends: Mt.MWidget,
 	options: {
-		label: 'GroupBox',
-		size: new Mt.MSize('auto', 'auto')
+		size: new Mt.MSize('auto','auto')
 	},
 	initialize: function(parent, options){
 		this.parent(parent, options)
-		this.setOptions(options);
-		this.type = 'MGroupBox';
 		
 		// Member variables
-		this.element.destroy();
-		this.element = new Element('fieldset').inject(this.container);
-		this.label = new Element('legend', {'text': this.options.label}).inject(this.element);
-		
-		// Final injection into DOM
-		this.container.inject(this.parentObj);
 	},
-	setTitle: function(title) {
-		this.label.set('text', title);
+	__type: function() {
+		this.type = 'MGroupBox';
+		return this.type;
+	},
+	__build: function() {
+		var element = new Element('fieldset', {
+			'class': this.type
+		});
+		this.label = new Element('legend', {text:'GroupBox'}).inject(element);
+		
+		return element;
+	},
+	setText: function(text) {
+		this.label.set('text', text);
 	}
 });

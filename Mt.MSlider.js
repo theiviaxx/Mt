@@ -103,7 +103,7 @@ Mt.MSlider = new Class({
 		
 		this.area = new Element('div', {'class': 'MSliderArea'}).inject(element);
 		this.area.setStyles({
-			width: (this.options.steps) ? this.size().width - 32 : this.size().width,
+			width: (this.options.steps) ? this.options.size.width() - 32 : this.options.size.width(),
 			top: 4,
 			margin: "0px 4px"
 		});

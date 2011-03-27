@@ -115,8 +115,14 @@ Mt.MAction = new Class({
 	setIconText: function(string) {
 		this.iconText = text
 	},
-	setMenu: function() {
-		
+	setMenu: function(menu) {
+		throw "Not Yet Implemented";
+		/*
+		this.menu = menu;
+		this.associatedWidgets.each(function(widget) {
+			widget.setMenu(this.menu);
+		}, this);
+		*/
 	},
 	setSeparator: function(bool) {
 		this.separator = bool;

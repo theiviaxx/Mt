@@ -8,6 +8,8 @@ Mt.MFrame = new Class({
 		
 		// Member variables
 		this.lineWidth = 1;
+		
+		this.container.addClass('MFrame');
 	},
 	__type: function() {
 		this.type = 'MFrame';
@@ -15,11 +17,8 @@ Mt.MFrame = new Class({
 	},
 	__build: function() {
 		var element = new Element('div', {
+			'class': this.type,
 			styles: {
-				width: this.geometry().width,
-				height: this.geometry().height,
-				top: this.geometry().y,
-				left: this.geometry().x,
 				'border-width': this.lineWidth
 			}
 		});

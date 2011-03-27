@@ -4,8 +4,8 @@
 		<title>Mt</title>
 		<link type="text/css" rel="stylesheet" href="../Mt.css" />
 		
-		<script type="text/javascript" src="/static/javascript/mootoolsCore.js"></script>
-		<script type="text/javascript" src="/static/javascript/mootoolsMore.js"></script>
+		<script type="text/javascript" src="../j/mootoolsCore.js"></script>
+		<script type="text/javascript" src="../j/mootoolsMore.js"></script>
 		<script type="text/javascript" src="../Mt.js"></script>
 		<script type="text/javascript" src="../Mt.MObject.js"></script>
 		<script type="text/javascript" src="../Mt.MWidget.js"></script>
@@ -20,37 +20,41 @@
 		<script type="text/javascript" src="../Mt.MSpinBox.js"></script>
 		<script type="text/javascript" src="../Mt.MLineEdit.js"></script>
 		<script type="text/javascript" src="../Mt.MMenu.js"></script>
+		<script type="text/javascript" src="../Mt.MBuiltins.js"></script>
+		<script type="text/javascript" src="../Mt.MTab.js"></script>
+		<script type="text/javascript" src="../Mt.MLayout.js"></script>
+		<script type="text/javascript" src="../Mt.MGroupBox.js"></script>
 		
 		
 		<script type="text/javascript">
-			var dlg, btn, btn1, l, le, s, x, p, tb, a, a2, sb, big;
+			var dlg, btn, btn1, l, le, s, x, p, tb, a, a2, sb, big, ck;
 			window.addEvent('domready', function() {
 				dlg = new Mt.MDialog(null, {
-					text: 'Dialog',
-					icon: '/static/images/icons/add.png',
 					content: 'main',
-					modal: true,
 					resize: true,
-					statusBar: true,
-					actions: [Mt.DialogActions.Close]
+					actions: [Mt.DialogActions.Close, Mt.DialogActions.Maximize]
 				});
-				btn = new Mt.MButton(dlg, {
-					text: 'Center',
-					icon: '/static/images/icons/add.png',
+				dlg.setWindowModality(Mt.WindowModality.WindowModal);
+				dlg.setWindowTitle('Dialog');
+				dlg.setIcon('../i/icons/add.png');
+				
+				btn = new Mt.MPushButton(dlg, {
 					onClick: function() {
 						dlg.center();
 					}
 				});
-				le = new Mt.MLineEdit(dlg, {});
-				l = new Mt.MListWidget(dlg, {});
-				new Mt.MButton(dlg, {
+				btn.setText('Center');
+				btn.setIcon('../i/icons/add.png');
+				le = new Mt.MLineEdit(dlg);
+				l = new Mt.MListWidget(dlg);
+				new Mt.MPushButton(dlg, {
 					text: 'add',
 					onClick: function() {
-						l.addItem(le.get('text'));
+						l.addItem(le.text());
 						le.clear();
 					}
 				});
-				new Mt.MButton(dlg, {
+				new Mt.MPushButton(dlg, {
 					text: 'remove',
 					onClick: function() {
 						l.removeItem(l.get('selected'));
@@ -58,23 +62,22 @@
 				});
 				l.addItems(['one', 'two', 'five', 'three', 'four', 'six']);
 				
-				btn1 = new Mt.MButton(null, {
+				btn1 = new Mt.MPushButton(null, {
 					text: 'Open',
-					icon: '/static/images/icons/add.png',
+					icon: '../i/icons/add.png',
 					onClick: function() {
 						//dlg.open();
 					}
 				});
 				
-				p = new Mt.MPanel(null, {
-					text: 'Panel2',
-					size: new Mt.MSize(800, 600)
-				});
-				tb = new Mt.MToolBar(p);
-				a = tb.addAction('Save as...');
-				a.setIcon('/static/images/icons/accept.png');
-				a2 = tb.addAction('xxx');
-				//btn1.addAction(a);
+				p = new Mt.MPanel();
+				p.setWindowTitle('Panel2');
+				p.setGeometry(0,0,800,600);
+				p.addToolBar();
+				a = p.toolBar().addAction('Save as...');
+				a.setIcon('../i/icons/accept.png');
+				a2 = p.toolBar().addAction('xxx');
+				btn1.addAction(a);
 				s = new Mt.MSlider(p, {
 					min: 50,
 					steps: true,
@@ -83,32 +86,56 @@
 					}
 				});
 				
-				// Buttons
-				big = new Mt.MButton(p, {
-					size: new Mt.MSize('auto', 'auto')
-				});
-				big.setIcon('/static/javascript/Mt/i/icon32.png');
-				big.setText('BIG');
 				
-				a.addEvent('triggered', function() {
+				// Buttons
+				big = new Mt.MPushButton(p, {
+					size: new Mt.MSize(64, 64)
+				});
+				big.setIcon('../i/icon32.png');
+				big.setText('BIG');
+				big.addEvent('click', function() {
+					var dlg = new Mt.MMessageBox();
+					dlg.setWindowTitle('title');
+					dlg.setText('someshit went down');
+					dlg.setIcon(Mt.MMessageBox.Icon.Warning);
 					dlg.open();
 				})
 				
+				a.addEvent('triggered', function() {
+					dlg.center();
+					dlg.open();
+				})
+				var radioGroup = new Mt.MGroupBox(p);
+				radioGroup.setText('Radio');
+				var checkGroup = new Mt.MGroupBox(p);
+				checkGroup.setText('CheckBox');
 				sp = new Mt.MSpinBox(p);
 				m = new Mt.MMenu();
+				m2 = new Mt.MMenu();
+				m2.setTitle('sub menu');
+				m2.addAction(a2);
+				var mi = new Mt.MMenuItem(a2);
 				//m.popup(new Mt.MPoint(200,200));
 				m.addAction(a);
 				m.addAction('yyy');
+				m.addMenu(m2);
 				//btn1.setMenu(m);
 				btn2 = new Mt.MSplitButton(null, {
 					text: 'SplitButton',
-					icon: '/static/images/icons/add.png',
+					icon: '../i/icons/add.png',
 					onChange: function() {
 						console.log('clicked')
 					}
 				});
 				btn2.setMenu(m);
-				//a.setEnabled(false)
+				var rb = new Mt.MRadioButton(radioGroup).setText('sss');
+				new Mt.MRadioButton(radioGroup).setText('xxx').setGroup(rb.group());
+				//a.setEnabled(false);
+				ck = new Mt.MCheckBox(checkGroup);
+				ck.setText('sss');
+				
+				var l = new Mt.MHBoxLayout();
+				p.setLayout(l);
 			})
 		</script>
 	</head>
@@ -116,5 +143,6 @@
 		<div id='main'>
 			
 		</div>
+		<div id='somediv'></div>
 	</body>
 </html>
